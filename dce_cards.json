@@ -1,0 +1,726 @@
+{
+  "valid_tasks": [
+    {
+      "task_id": 1001,
+      "is_attention": false,
+      "alts": [
+        {
+          "alt_id": 1,
+          "price": 800.0,
+          "S": 3000000,
+          "copay": 0.2
+        },
+        {
+          "alt_id": 2,
+          "price": 4434.59,
+          "S": 3000000,
+          "copay": 0.3
+        },
+        {
+          "alt_id": 3,
+          "price": 3950.94,
+          "S": 200000,
+          "copay": 0.2
+        }
+      ]
+    },
+    {
+      "task_id": 1002,
+      "is_attention": false,
+      "alts": [
+        {
+          "alt_id": 1,
+          "price": 2733.56,
+          "S": 600000,
+          "copay": 0.1
+        },
+        {
+          "alt_id": 2,
+          "price": 2680.22,
+          "S": 1000000,
+          "copay": 0.4
+        },
+        {
+          "alt_id": 3,
+          "price": 800.0,
+          "S": 1500000,
+          "copay": 0.4
+        }
+      ]
+    },
+    {
+      "task_id": 1003,
+      "is_attention": false,
+      "alts": [
+        {
+          "alt_id": 1,
+          "price": 4487.43,
+          "S": 3000000,
+          "copay": 0.2
+        },
+        {
+          "alt_id": 2,
+          "price": 4589.97,
+          "S": 3000000,
+          "copay": 0.1
+        },
+        {
+          "alt_id": 3,
+          "price": 800.0,
+          "S": 600000,
+          "copay": 0.4
+        }
+      ]
+    },
+    {
+      "task_id": 1004,
+      "is_attention": false,
+      "alts": [
+        {
+          "alt_id": 1,
+          "price": 2707.65,
+          "S": 600000,
+          "copay": 0.1
+        },
+        {
+          "alt_id": 2,
+          "price": 4122.62,
+          "S": 2000000,
+          "copay": 0.3
+        },
+        {
+          "alt_id": 3,
+          "price": 800.0,
+          "S": 400000,
+          "copay": 0.5
+        }
+      ]
+    },
+    {
+      "task_id": 1005,
+      "is_attention": false,
+      "alts": [
+        {
+          "alt_id": 1,
+          "price": 800.0,
+          "S": 200000,
+          "copay": 0.4
+        },
+        {
+          "alt_id": 2,
+          "price": 2832.58,
+          "S": 3000000,
+          "copay": 0.2
+        },
+        {
+          "alt_id": 3,
+          "price": 2622.45,
+          "S": 400000,
+          "copay": 0.3
+        }
+      ]
+    },
+    {
+      "task_id": 1006,
+      "is_attention": false,
+      "alts": [
+        {
+          "alt_id": 1,
+          "price": 2720.22,
+          "S": 2000000,
+          "copay": 0.4
+        },
+        {
+          "alt_id": 2,
+          "price": 2657.32,
+          "S": 1000000,
+          "copay": 0.4
+        },
+        {
+          "alt_id": 3,
+          "price": 2762.01,
+          "S": 400000,
+          "copay": 0.2
+        }
+      ]
+    },
+    {
+      "task_id": 1007,
+      "is_attention": false,
+      "alts": [
+        {
+          "alt_id": 1,
+          "price": 800.0,
+          "S": 200000,
+          "copay": 0.3
+        },
+        {
+          "alt_id": 2,
+          "price": 2720.39,
+          "S": 3000000,
+          "copay": 0.2
+        },
+        {
+          "alt_id": 3,
+          "price": 2695.68,
+          "S": 3000000,
+          "copay": 0.5
+        }
+      ]
+    },
+    {
+      "task_id": 1008,
+      "is_attention": false,
+      "alts": [
+        {
+          "alt_id": 1,
+          "price": 2697.06,
+          "S": 1500000,
+          "copay": 0.3
+        },
+        {
+          "alt_id": 2,
+          "price": 2469.01,
+          "S": 200000,
+          "copay": 0.4
+        },
+        {
+          "alt_id": 3,
+          "price": 800.0,
+          "S": 200000,
+          "copay": 0.3
+        }
+      ]
+    },
+    {
+      "task_id": 1009,
+      "is_attention": false,
+      "alts": [
+        {
+          "alt_id": 1,
+          "price": 2452.35,
+          "S": 1500000,
+          "copay": 0.5
+        },
+        {
+          "alt_id": 2,
+          "price": 800.0,
+          "S": 1000000,
+          "copay": 0.4
+        },
+        {
+          "alt_id": 3,
+          "price": 3863.17,
+          "S": 600000,
+          "copay": 0.3
+        }
+      ]
+    },
+    {
+      "task_id": 1010,
+      "is_attention": false,
+      "alts": [
+        {
+          "alt_id": 1,
+          "price": 800.0,
+          "S": 600000,
+          "copay": 0.3
+        },
+        {
+          "alt_id": 2,
+          "price": 2522.45,
+          "S": 400000,
+          "copay": 0.3
+        },
+        {
+          "alt_id": 3,
+          "price": 3919.5,
+          "S": 1000000,
+          "copay": 0.4
+        }
+      ]
+    },
+    {
+      "task_id": 1011,
+      "is_attention": false,
+      "alts": [
+        {
+          "alt_id": 1,
+          "price": 3871.93,
+          "S": 200000,
+          "copay": 0.1
+        },
+        {
+          "alt_id": 2,
+          "price": 800.0,
+          "S": 3000000,
+          "copay": 0.4
+        },
+        {
+          "alt_id": 3,
+          "price": 800.0,
+          "S": 2000000,
+          "copay": 0.5
+        }
+      ]
+    },
+    {
+      "task_id": 1012,
+      "is_attention": false,
+      "alts": [
+        {
+          "alt_id": 1,
+          "price": 2475.11,
+          "S": 200000,
+          "copay": 0.3
+        },
+        {
+          "alt_id": 2,
+          "price": 800.0,
+          "S": 1500000,
+          "copay": 0.3
+        },
+        {
+          "alt_id": 3,
+          "price": 4451.97,
+          "S": 1500000,
+          "copay": 0.3
+        }
+      ]
+    },
+    {
+      "task_id": 1013,
+      "is_attention": false,
+      "alts": [
+        {
+          "alt_id": 1,
+          "price": 800.0,
+          "S": 400000,
+          "copay": 0.4
+        },
+        {
+          "alt_id": 2,
+          "price": 800.0,
+          "S": 3000000,
+          "copay": 0.5
+        },
+        {
+          "alt_id": 3,
+          "price": 800.0,
+          "S": 600000,
+          "copay": 0.1
+        }
+      ]
+    },
+    {
+      "task_id": 1014,
+      "is_attention": false,
+      "alts": [
+        {
+          "alt_id": 1,
+          "price": 800.0,
+          "S": 1000000,
+          "copay": 0.3
+        },
+        {
+          "alt_id": 2,
+          "price": 2809.18,
+          "S": 3000000,
+          "copay": 0.2
+        },
+        {
+          "alt_id": 3,
+          "price": 800.0,
+          "S": 200000,
+          "copay": 0.4
+        }
+      ]
+    },
+    {
+      "task_id": 1015,
+      "is_attention": false,
+      "alts": [
+        {
+          "alt_id": 1,
+          "price": 800.0,
+          "S": 200000,
+          "copay": 0.5
+        },
+        {
+          "alt_id": 2,
+          "price": 2652.99,
+          "S": 3000000,
+          "copay": 0.5
+        },
+        {
+          "alt_id": 3,
+          "price": 4244.41,
+          "S": 400000,
+          "copay": 0.1
+        }
+      ]
+    },
+    {
+      "task_id": 1016,
+      "is_attention": false,
+      "alts": [
+        {
+          "alt_id": 1,
+          "price": 800.0,
+          "S": 400000,
+          "copay": 0.3
+        },
+        {
+          "alt_id": 2,
+          "price": 4000.31,
+          "S": 600000,
+          "copay": 0.2
+        },
+        {
+          "alt_id": 3,
+          "price": 2751.25,
+          "S": 2000000,
+          "copay": 0.3
+        }
+      ]
+    },
+    {
+      "task_id": 1017,
+      "is_attention": false,
+      "alts": [
+        {
+          "alt_id": 1,
+          "price": 2747.52,
+          "S": 3000000,
+          "copay": 0.4
+        },
+        {
+          "alt_id": 2,
+          "price": 2818.55,
+          "S": 3000000,
+          "copay": 0.3
+        },
+        {
+          "alt_id": 3,
+          "price": 2808.82,
+          "S": 1000000,
+          "copay": 0.2
+        }
+      ]
+    },
+    {
+      "task_id": 1018,
+      "is_attention": false,
+      "alts": [
+        {
+          "alt_id": 1,
+          "price": 800.0,
+          "S": 200000,
+          "copay": 0.2
+        },
+        {
+          "alt_id": 2,
+          "price": 3940.08,
+          "S": 3000000,
+          "copay": 0.5
+        },
+        {
+          "alt_id": 3,
+          "price": 800.0,
+          "S": 400000,
+          "copay": 0.3
+        }
+      ]
+    },
+    {
+      "task_id": 1019,
+      "is_attention": false,
+      "alts": [
+        {
+          "alt_id": 1,
+          "price": 3880.23,
+          "S": 200000,
+          "copay": 0.2
+        },
+        {
+          "alt_id": 2,
+          "price": 2589.11,
+          "S": 3000000,
+          "copay": 0.5
+        },
+        {
+          "alt_id": 3,
+          "price": 2669.05,
+          "S": 200000,
+          "copay": 0.1
+        }
+      ]
+    },
+    {
+      "task_id": 1020,
+      "is_attention": false,
+      "alts": [
+        {
+          "alt_id": 1,
+          "price": 2597.33,
+          "S": 200000,
+          "copay": 0.2
+        },
+        {
+          "alt_id": 2,
+          "price": 800.0,
+          "S": 3000000,
+          "copay": 0.5
+        },
+        {
+          "alt_id": 3,
+          "price": 2584.98,
+          "S": 1500000,
+          "copay": 0.5
+        }
+      ]
+    },
+    {
+      "task_id": 1021,
+      "is_attention": false,
+      "alts": [
+        {
+          "alt_id": 1,
+          "price": 4728.19,
+          "S": 3000000,
+          "copay": 0.1
+        },
+        {
+          "alt_id": 2,
+          "price": 4322.38,
+          "S": 1500000,
+          "copay": 0.2
+        },
+        {
+          "alt_id": 3,
+          "price": 800.0,
+          "S": 400000,
+          "copay": 0.4
+        }
+      ]
+    },
+    {
+      "task_id": 1022,
+      "is_attention": false,
+      "alts": [
+        {
+          "alt_id": 1,
+          "price": 4269.58,
+          "S": 1500000,
+          "copay": 0.4
+        },
+        {
+          "alt_id": 2,
+          "price": 800.0,
+          "S": 600000,
+          "copay": 0.1
+        },
+        {
+          "alt_id": 3,
+          "price": 800.0,
+          "S": 2000000,
+          "copay": 0.4
+        }
+      ]
+    },
+    {
+      "task_id": 1023,
+      "is_attention": false,
+      "alts": [
+        {
+          "alt_id": 1,
+          "price": 800.0,
+          "S": 2000000,
+          "copay": 0.2
+        },
+        {
+          "alt_id": 2,
+          "price": 800.0,
+          "S": 1500000,
+          "copay": 0.5
+        },
+        {
+          "alt_id": 3,
+          "price": 800.0,
+          "S": 600000,
+          "copay": 0.3
+        }
+      ]
+    },
+    {
+      "task_id": 1024,
+      "is_attention": false,
+      "alts": [
+        {
+          "alt_id": 1,
+          "price": 800.0,
+          "S": 2000000,
+          "copay": 0.2
+        },
+        {
+          "alt_id": 2,
+          "price": 4481.24,
+          "S": 2000000,
+          "copay": 0.1
+        },
+        {
+          "alt_id": 3,
+          "price": 800.0,
+          "S": 400000,
+          "copay": 0.5
+        }
+      ]
+    }
+  ],
+  "attention_tasks": [
+    {
+      "task_id": 2001,
+      "is_attention": true,
+      "alts": [
+        {
+          "alt_id": 1,
+          "price": 760.0,
+          "S": 2000000,
+          "copay": 0.1
+        },
+        {
+          "alt_id": 2,
+          "price": 4436.38,
+          "S": 1000000,
+          "copay": 0.2
+        },
+        {
+          "alt_id": 3,
+          "price": 2819.94,
+          "S": 400000,
+          "copay": 0.4
+        }
+      ]
+    },
+    {
+      "task_id": 2002,
+      "is_attention": true,
+      "alts": [
+        {
+          "alt_id": 1,
+          "price": 760.0,
+          "S": 2000000,
+          "copay": 0.1
+        },
+        {
+          "alt_id": 2,
+          "price": 4543.08,
+          "S": 1000000,
+          "copay": 0.2
+        },
+        {
+          "alt_id": 3,
+          "price": 2743.0,
+          "S": 400000,
+          "copay": 0.4
+        }
+      ]
+    },
+    {
+      "task_id": 2003,
+      "is_attention": true,
+      "alts": [
+        {
+          "alt_id": 1,
+          "price": 760.0,
+          "S": 2000000,
+          "copay": 0.1
+        },
+        {
+          "alt_id": 2,
+          "price": 4550.57,
+          "S": 1000000,
+          "copay": 0.2
+        },
+        {
+          "alt_id": 3,
+          "price": 2841.37,
+          "S": 400000,
+          "copay": 0.4
+        }
+      ]
+    },
+    {
+      "task_id": 2004,
+      "is_attention": true,
+      "alts": [
+        {
+          "alt_id": 1,
+          "price": 760.0,
+          "S": 2000000,
+          "copay": 0.1
+        },
+        {
+          "alt_id": 2,
+          "price": 4446.35,
+          "S": 1000000,
+          "copay": 0.2
+        },
+        {
+          "alt_id": 3,
+          "price": 2895.96,
+          "S": 400000,
+          "copay": 0.4
+        }
+      ]
+    },
+    {
+      "task_id": 2005,
+      "is_attention": true,
+      "alts": [
+        {
+          "alt_id": 1,
+          "price": 760.0,
+          "S": 2000000,
+          "copay": 0.1
+        },
+        {
+          "alt_id": 2,
+          "price": 4487.03,
+          "S": 1000000,
+          "copay": 0.2
+        },
+        {
+          "alt_id": 3,
+          "price": 2873.28,
+          "S": 400000,
+          "copay": 0.4
+        }
+      ]
+    },
+    {
+      "task_id": 2006,
+      "is_attention": true,
+      "alts": [
+        {
+          "alt_id": 1,
+          "price": 760.0,
+          "S": 2000000,
+          "copay": 0.1
+        },
+        {
+          "alt_id": 2,
+          "price": 4565.09,
+          "S": 1000000,
+          "copay": 0.2
+        },
+        {
+          "alt_id": 3,
+          "price": 2657.16,
+          "S": 400000,
+          "copay": 0.4
+        }
+      ]
+    }
+  ]
+}
