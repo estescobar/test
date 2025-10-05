@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>DCE Seguros de Salud RD — Encuesta</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{
+      --bg:#0b1020; --fg:#f6f7fb; --muted:#c7ccdb; --card:#121936; --acc:#7aa2ff; --acc2:#00c2a8; --warn:#ffcc00;
+      --red:#ff6b6b; --green:#2ecc71; --gray:#8c94ad;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif;
+      background:linear-gradient(160deg,#0a1022 0%,#101a3d 100%); color:var(--fg);
+    }
+    .container{max-width:980px; margin:0 auto; padding:24px 16px;}
+    header{padding:24px 0 8px;}
+    h1{font-size:2rem; margin:0 0 8px}
+    h2{font-size:1.2rem; margin:16px 0 8px; color:var(--muted)}
+    p{line-height:1.6; color:#e5e7f2}
+    .card{
+      background:rgba(18,25,54,0.9); border:1px solid rgba(255,255,255,0.08);
+      border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,0.35); padding:16px; margin:16px 0;
+    }
+    .grid{display:grid; gap:16px}
+    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .btn{
+      appearance:none; border:0; border-radius:12px; padding:12px 16px; font-weight:600; cursor:pointer;
+      background:linear-gradient(90deg,var(--acc),var(--acc2)); color:#051026; transition:transform .06s ease;
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn.secondary{background:#1f2a57; color:var(--fg); border:1px solid rgba(255,255,255,0.12)}
+    .btn.warn{background:var(--warn); color:#1b1907}
+    .muted{color:var(--muted)}
+    .row{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
+    .spacer{flex:1}
+    .progress{height:10px; background:#151d3c; border-radius:8px; overflow:hidden}
+    .progress > div{height:100%; width:0%; background:linear-gradient(90deg,var(--acc),var(--acc2))}
+    table{
+      width:100%; border-collapse:separate; border-spacing:0; overflow:hidden; border-radius:12px;
+      background:#0f1533; border:1px solid rgba(255,255,255,0.08);
+    }
+    th,td{padding:12px 10px; text-align:center}
+    th{background:rgba(255,255,255,0.04); color:#cfe2ff; font-weight:700}
+    tr + tr td{border-top:1px solid rgba(255,255,255,0.07)}
+    .optout{color:#cbd3ee; font-style:italic}
+    .tag{display:inline-block; padding:2px 8px; border-radius:999px; font-size:.8rem; background:#18214d; color:#bcd}
+    .tag.attn{background:#2f1d1d; color:#ffb3b3; border:1px solid rgba(255,0,0,0.25)}
+    footer{margin:32px 0 16px; text-align:center; color:#9aa4c7; font-size:.9rem}
+    .hidden{display:none}
+    @media (max-width:700px){
+      .grid-2{grid-template-columns:1fr}
+      th:nth-child(2),td:nth-child(2){white-space:nowrap}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>DCE Seguros de Salud RD — Encuesta</h1>
+      <div class="muted">10 tareas válidas + 2 de control (atención). En cada tarea seleccione <b>una</b> opción.</div>
+    </header>
+
+    <!-- Introducción y objetivos -->
+    <section id="intro" class="card">
+      <h2>Introducción</h2>
+      <p>
+        Este estudio busca entender cómo las personas valoran <b>prima mensual</b>, <b>suma asegurada</b> y <b>copago</b>
+        en planes complementarios al PBS en República Dominicana. Sus respuestas nos ayudarán a estimar sensibilidades
+        (elasticidades) de precio, cobertura (<em>ln</em> suma asegurada) y copago.
+      </p>
+      <h2>Objetivos</h2>
+      <ul>
+        <li>Medir la preferencia relativa por cobertura y copago frente a prima.</li>
+        <li>Estimar elasticidades y disposición a pagar.</li>
+        <li>Evaluar consistencia mediante tareas de control (dominancia clara).</li>
+      </ul>
+      <h2>Dinámica</h2>
+      <ol>
+        <li>Verá <b>12 tareas</b>. Cada una muestra <b>3 alternativas</b> de plan y una <b>opción externa (No comprar)</b>.</li>
+        <li>Seleccione <b>exactamente una</b> opción por tarea.</li>
+        <li>La encuesta dura ~5–7 minutos. Se registra el <b>tiempo</b> por tarea (calidad).</li>
+      </ol>
+      <div class="card" style="background:#0b1330">
+        <label class="row" style="align-items:flex-start">
+          <input type="checkbox" id="consent" />
+          <span>Acepto participar de forma voluntaria y confirmo que comprendo la dinámica.</span>
+        </label>
+        <div class="row" style="margin-top:10px">
+          <div class="spacer"></div>
+          <button class="btn" id="startBtn" disabled>Comenzar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tareas -->
+    <section id="survey" class="hidden">
+      <div class="card">
+        <div class="row">
+          <div id="taskHeader" class="tag">Tarea 1 / 12</div>
+          <div id="attnTag" class="tag attn hidden">Control de atención</div>
+          <div class="spacer"></div>
+          <div style="min-width:160px">
+            <div class="progress"><div id="progressBar"></div></div>
+          </div>
+        </div>
+
+        <div id="tableWrap" style="margin-top:12px"></div>
+
+        <div class="row" style="margin-top:14px">
+          <div class="muted" id="orderNote"></div>
+          <div class="spacer"></div>
+          <button class="btn secondary" id="prevBtn">Anterior</button>
+          <button class="btn" id="nextBtn">Siguiente</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final -->
+    <section id="finish" class="hidden">
+      <div class="card">
+        <h2>¡Gracias!</h2>
+        <p>Revise y descargue sus respuestas en CSV. Si algo falta, puede volver a las tareas.</p>
+        <div class="row">
+          <button class="btn secondary" id="backToSurvey">Volver</button>
+          <div class="spacer"></div>
+          <button class="btn" id="downloadCsv">Descargar CSV</button>
+        </div>
+        <p class="muted" style="margin-top:10px">El archivo CSV incluye: <code>resp_id, block_id, task_id, alt_id, chosen, price, S, copay, lnS, generosity, is_optout, is_attention_task, shown_order, response_time_sec</code>.</p>
+      </div>
+    </section>
+
+    <footer>© 2025 Estudio DCE Salud RD — Demostración</footer>
+  </div>
+
+  <script>
+    // ====== CONFIG ======
+    const JSON_PATH = './dce_cards.json'; // coloca el archivo en el mismo directorio del index.html
+    const REQUIRED_VALID = 10;
+    const REQUIRED_ATTENTION = 2;
+    const TOTAL_TASKS = REQUIRED_VALID + REQUIRED_ATTENTION;
+
+    // ====== ESTADO ======
+    let allValid = [];       // tareas válidas (sin dominancia), cada una con 3 alternativas
+    let allAttention = [];   // tareas de control (dominancia)
+    let blockId = 1;         // puedes versionar si usas varios bloques
+    let respondentId = String(Math.floor(Math.random()*1e9));
+    let sampledTasks = [];   // arreglo de 12 tareas (10 válidas + 2 control), cada tarea={tId,isAttention,alts[],optout{}}
+    let taskPointer = 0;     // índice en sampledTasks
+    let currentStartTime = null;
+    let responses = [];      // acumulador de filas "long"
+
+    // ====== UTIL ======
+    const $ = sel => document.querySelector(sel);
+    const fmtMoney = v => `RD$ ${Number(v).toFixed(2)}`;
+    const shuffle = (arr) => arr.map(v => [Math.random(), v]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+
+    function downloadFile(filename, content) {
+      const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function toCSV(rows) {
+      const header = Object.keys(rows[0]);
+      const escape = (s) => {
+        if (s == null) return '';
+        s = String(s);
+        if (s.includes('"') || s.includes(',') || s.includes('\n')) {
+          return `"${s.replace(/"/g,'""')}"`;
+        }
+        return s;
+      };
+      const lines = [header.join(',')];
+      rows.forEach(r=>{
+        lines.push(header.map(k=>escape(r[k])).join(','));
+      });
+      return lines.join('\n');
+    }
+
+    // ====== CARGA DE JSON ======
+    async function loadDesign() {
+      try {
+        const res = await fetch(JSON_PATH, {cache:'no-store'});
+        if (!res.ok) throw new Error('No se pudo cargar dce_cards.json');
+        const data = await res.json();
+        if (!Array.isArray(data.valid_tasks) || !Array.isArray(data.attention_tasks)) {
+          throw new Error('JSON inválido: se esperan arrays valid_tasks y attention_tasks');
+        }
+        allValid = data.valid_tasks;
+        allAttention = data.attention_tasks;
+      } catch (err) {
+        console.warn('Fallo al cargar JSON. Usando ejemplo embebido.', err);
+        // Ejemplo embebido mínimo (2 válidas + 1 atención) — SOLO para que corra si falta el archivo.
+        allValid = [
+          { task_id:101, alts:[
+            {alt_id:1, price:1150, S:600000, copay:0.30},
+            {alt_id:2, price:2450, S:1500000, copay:0.20},
+            {alt_id:3, price:480,  S:300000,  copay:0.40}
+          ], is_attention:false },
+          { task_id:102, alts:[
+            {alt_id:1, price:800,  S:400000,  copay:0.30},
+            {alt_id:2, price:1600, S:600000,  copay:0.20},
+            {alt_id:3, price:3200, S:1000000, copay:0.20}
+          ], is_attention:false },
+        ];
+        allAttention = [
+          { task_id:201, alts:[
+            {alt_id:1, price:500,  S:2000000, copay:0.10}, // dominante
+            {alt_id:2, price:3500, S:1000000, copay:0.20},
+            {alt_id:3, price:1400, S:400000,  copay:0.40}
+          ], is_attention:true }
+        ];
+      }
+    }
+
+    // ====== MUESTREO DE 10 + 2 ======
+    function sampleTasks() {
+      if (allValid.length < REQUIRED_VALID || allAttention.length < REQUIRED_ATTENTION) {
+        alert('El archivo dce_cards.json no tiene suficientes tareas (válidas y/o de atención).');
+      }
+      const validShuffled = shuffle(allValid).slice(0, REQUIRED_VALID);
+      const attnShuffled  = shuffle(allAttention).slice(0, REQUIRED_ATTENTION);
+      const pool = shuffle([...validShuffled, ...attnShuffled]).map((t,i) => {
+        const alts = shuffle(t.alts.map(a => ({...a}))); // randomizar orden mostrado
+        // agregamos "opt-out" sintético
+        const optout = { alt_id:0, price:0, S:0, copay:1.0 };
+        return {
+          index: i, // posición en el flujo
+          task_id: t.task_id ?? 1000+i,
+          is_attention: !!t.is_attention,
+          alts,
+          optout
+        };
+      });
+      sampledTasks = pool;
+    }
+
+    // ====== RENDER ======
+    function renderTask() {
+      const total = sampledTasks.length;
+      const t = sampledTasks[taskPointer];
+      $('#taskHeader').textContent = `Tarea ${taskPointer+1} / ${total}`;
+      $('#attnTag').classList.toggle('hidden', !t.is_attention);
+      // barra de progreso
+      const pct = Math.round(((taskPointer)/total)*100);
+      $('#progressBar').style.width = pct+'%';
+
+      // construir tabla
+      const rows = [...t.alts, t.optout];
+      const orderMap = new Map(); // alt_id -> shown_order
+      rows.forEach((r, idx) => {
+        const label = r.alt_id === 0 ? 'optout' : (idx+1);
+        orderMap.set(r.alt_id, label);
+      });
+
+      let html = `
+        <table>
+          <thead>
+            <tr>
+              <th>Seleccione</th>
+              <th>Alternativa</th>
+              <th>Prima mensual</th>
+              <th>Suma asegurada</th>
+              <th>Copago %</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+      rows.forEach((r, idx) => {
+        const isOpt = r.alt_id === 0;
+        const name = `choice_t${taskPointer}`;
+        const altLabel = isOpt ? 'Opción externa (No comprar)' : `Plan ${idx+1}`;
+        const trClass = isOpt ? ' class="optout"' : '';
+        const Sfmt = isOpt ? '—' : Number(r.S).toLocaleString('es-DO');
+        const Pfmt = isOpt ? '—' : fmtMoney(r.price);
+        const Cfmt = isOpt ? '—' : `${Math.round(100*r.copay)}%`;
+        html += `
+          <tr${trClass}>
+            <td><input type="radio" name="${name}" value="${r.alt_id}"></td>
+            <td>${altLabel}</td>
+            <td>${Pfmt}</td>
+            <td>${Sfmt}</td>
+            <td>${Cfmt}</td>
+          </tr>
+        `;
+      });
+      html += `</tbody></table>`;
+      $('#tableWrap').innerHTML = html;
+
+      // nota de orden mostrado
+      const shownOrder = rows.map((r, idx) => (r.alt_id===0?'optout':`Plan ${idx+1}`)).join(' · ');
+      $('#orderNote').textContent = `Orden mostrado: ${shownOrder}`;
+
+      // marcar si ya había respuesta guardada
+      const existing = responses.find(x=>x.task_id===t.task_id);
+      if (existing) {
+        const picked = existing.alt_id;
+        const ipt = document.querySelector(`input[name="choice_t${taskPointer}"][value="${picked}"]`);
+        if (ipt) ipt.checked = true;
+      }
+
+      currentStartTime = performance.now();
+    }
+
+    function ensureAnswerOrWarn() {
+      const ipt = document.querySelector(`input[name="choice_t${taskPointer}"]:checked`);
+      if (!ipt) { alert('Por favor seleccione una opción para continuar.'); return null; }
+      return Number(ipt.value);
+    }
+
+    // Guarda respuestas de la tarea actual en formato long (4 filas)
+    function saveCurrentTask(choiceAltId) {
+      const t = sampledTasks[taskPointer];
+      const elapsed = (performance.now() - currentStartTime)/1000;
+      const rows = [...t.alts, t.optout];
+      // construir 4 filas (3 planes + optout)
+      const taskRows = rows.map((r, idx) => {
+        const isOpt = r.alt_id === 0;
+        const price = r.price ?? 0;
+        const S = r.S ?? 0;
+        const copay = r.copay ?? 1.0;
+        const lnS = S>0 ? Math.log(S) : '';
+        const generosity = S>0 ? (1-copay) : '';
+        const shown_order = isOpt ? 'optout' : (idx+1);
+        return {
+          resp_id: respondentId,
+          block_id: blockId,
+          task_id: t.task_id,
+          alt_id: r.alt_id,
+          chosen: Number(choiceAltId === r.alt_id),
+          price: price,
+          S: S,
+          copay: copay,
+          lnS: lnS,
+          generosity: generosity,
+          is_optout: Number(isOpt),
+          is_attention_task: Number(t.is_attention),
+          shown_order: shown_order,
+          response_time_sec: elapsed.toFixed(2)
+        };
+      });
+
+      // reemplazar si ya existían filas de esta tarea
+      responses = responses.filter(x => x.task_id !== t.task_id).concat(taskRows);
+    }
+
+    // ====== EVENTOS UI ======
+    $('#consent').addEventListener('change', e=>{
+      $('#startBtn').disabled = !e.target.checked;
+    });
+
+    $('#startBtn').addEventListener('click', async ()=>{
+      await loadDesign();
+      sampleTasks();
+      $('#intro').classList.add('hidden');
+      $('#survey').classList.remove('hidden');
+      taskPointer = 0;
+      responses = [];
+      renderTask();
+    });
+
+    $('#prevBtn').addEventListener('click', ()=>{
+      if (taskPointer <= 0) return;
+      // guardar si ya hay selección
+      const selected = document.querySelector(`input[name="choice_t${taskPointer}"]:checked`);
+      if (selected) saveCurrentTask(Number(selected.value));
+      taskPointer--;
+      renderTask();
+    });
+
+    $('#nextBtn').addEventListener('click', ()=>{
+      const choice = ensureAnswerOrWarn(); if (choice==null) return;
+      saveCurrentTask(choice);
+      if (taskPointer < sampledTasks.length-1) {
+        taskPointer++;
+        renderTask();
+      } else {
+        // terminar
+        $('#survey').classList.add('hidden');
+        $('#finish').classList.remove('hidden');
+      }
+    });
+
+    $('#backToSurvey').addEventListener('click', ()=>{
+      $('#finish').classList.add('hidden');
+      $('#survey').classList.remove('hidden');
+      renderTask();
+    });
+
+    $('#downloadCsv').addEventListener('click', ()=>{
+      // Validación mínima: 12 tareas * 4 filas = 48 filas
+      const expectedRows = TOTAL_TASKS * 4;
+      if (responses.length < expectedRows) {
+        const ok = confirm('Parece que faltan respuestas. ¿Descargar de todos modos?');
+        if (!ok) return;
+      }
+      // Ordenar filas por task_id y alt_id para legibilidad
+      const sorted = responses.slice().sort((a,b)=> (a.task_id-b.task_id) || (a.alt_id-b.alt_id));
+      const csv = toCSV(sorted);
+      const fname = `dce_respuestas_${respondentId}.csv`;
+      downloadFile(fname, csv);
+    });
+  </script>
+</body>
+</html>
