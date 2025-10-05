@@ -269,19 +269,19 @@
     // ENVÍO AL BACKEND
     // ==========================
     async function postRowsToServer(rows){
-      // se envía un lote (normalmente, 4 filas de una tarea)
-      const payload = { rows };
-      const res = await fetch(API_URL, {
-        method:'POST',
-        headers:{ 'Content-Type':'application/json' },
-        body: JSON.stringify(payload)
-      });
-      if (!res.ok) {
-        const msg = await res.text();
-        throw new Error(msg || 'POST falló');
-      }
-      return true;
-    }
+  // Enviamos JSON como texto plano para evitar preflight CORS
+  const payload = { rows };
+  const res = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload)
+  });
+  if (!res.ok) {
+    const msg = await res.text();
+    throw new Error(msg || 'POST falló');
+  }
+  return true;
+}
 
     // ==========================
     // RENDER DE TAREAS
@@ -457,4 +457,5 @@
   </script>
 </body>
 </html>
+
 
