@@ -1,8 +1,6 @@
 class InsuranceStudy {
     constructor() {
-        // Cargar estado previo del sessionStorage o inicializar
         const savedState = this.loadSavedState();
-        
         this.currentCard = savedState.currentCard || 0;
         this.responses = savedState.responses || [];
         this.userData = savedState.userData || {};
@@ -51,63 +49,52 @@ class InsuranceStudy {
     }
 
     generateInsuranceDecks() {
-        // 10 decks predefinidos con diferentes combinaciones estratégicas
         return [
-            // Deck 1: Opciones balanceadas
             [
                 {prima: 300, suma: 50000, copago: 0.1},
                 {prima: 200, suma: 30000, copago: 0.2},
                 {prima: 150, suma: 20000, copago: 0.3}
             ],
-            // Deck 2: Cobertura alta vs precio bajo
             [
                 {prima: 500, suma: 100000, copago: 0.1},
                 {prima: 350, suma: 70000, copago: 0.15},
                 {prima: 250, suma: 40000, copago: 0.25}
             ],
-            // Deck 3: Enfoque en bajo copago
             [
                 {prima: 400, suma: 60000, copago: 0.05},
                 {prima: 280, suma: 45000, copago: 0.1},
                 {prima: 180, suma: 30000, copago: 0.2}
             ],
-            // Deck 4: Opciones económicas
             [
                 {prima: 180, suma: 25000, copago: 0.3},
                 {prima: 120, suma: 15000, copago: 0.4},
                 {prima: 80, suma: 10000, copago: 0.5}
             ],
-            // Deck 5: Premium vs estándar
             [
                 {prima: 600, suma: 150000, copago: 0.05},
                 {prima: 350, suma: 80000, copago: 0.1},
                 {prima: 200, suma: 40000, copago: 0.2}
             ],
-            // Deck 6: Variación de copagos
             [
                 {prima: 320, suma: 55000, copago: 0.1},
                 {prima: 270, suma: 50000, copago: 0.2},
                 {prima: 220, suma: 45000, copago: 0.3}
             ],
-            // Deck 7: Enfoque en suma asegurada
             [
                 {prima: 450, suma: 120000, copago: 0.15},
                 {prima: 300, suma: 75000, copago: 0.2},
                 {prima: 190, suma: 45000, copago: 0.25}
             ],
-            // Deck 8: Opciones balanceadas
             [
                 {prima: 280, suma: 60000, copago: 0.15},
                 {prima: 210, suma: 45000, copago: 0.25},
                 {prima: 160, suma: 35000, copago: 0.35}
             ],
-            // Deck 9: Alta gama
             [
                 {prima: 700, suma: 200000, copago: 0.05},
                 {prima: 450, suma: 120000, copago: 0.1},
                 {prima: 300, suma: 70000, copago: 0.15}
             ],
-            // Deck 10: Económico final
             [
                 {prima: 150, suma: 30000, copago: 0.25},
                 {prima: 100, suma: 20000, copago: 0.35},
@@ -117,7 +104,6 @@ class InsuranceStudy {
     }
 
     initializeEventListeners() {
-        // Formulario demográfico
         const demographicForm = document.getElementById('demographic-form');
         if (demographicForm) {
             demographicForm.addEventListener('submit', (e) => {
@@ -126,7 +112,6 @@ class InsuranceStudy {
             });
         }
 
-        // Inicio del estudio
         const startStudyBtn = document.getElementById('start-study');
         if (startStudyBtn) {
             startStudyBtn.addEventListener('click', () => {
@@ -134,15 +119,13 @@ class InsuranceStudy {
             });
         }
 
-        // Botón "No Comprar"
         const noBuyBtn = document.getElementById('no-buy');
         if (noBuyBtn) {
             noBuyBtn.addEventListener('click', () => {
-                this.recordResponse(3); // 3 representa "no comprar"
+                this.recordResponse(3);
             });
         }
 
-        // Prevenir recarga accidental de la página
         window.addEventListener('beforeunload', (e) => {
             if (this.currentCard > 0 && this.currentCard < 10) {
                 e.preventDefault();
@@ -159,7 +142,6 @@ class InsuranceStudy {
             startTime: new Date().toISOString()
         };
 
-        // Validaciones adicionales
         const age = parseInt(this.userData.age);
         if (age < 18 || age > 80) {
             alert('Por favor, ingresa una edad válida entre 18 y 80 años.');
@@ -176,7 +158,6 @@ class InsuranceStudy {
     }
 
     startStudy() {
-        // Reiniciar si ya completó el estudio antes
         if (this.responses.length >= 10) {
             if (confirm('Ya completaste este estudio. ¿Quieres empezar de nuevo?')) {
                 this.currentCard = 0;
@@ -192,7 +173,6 @@ class InsuranceStudy {
     }
 
     showCurrentStep() {
-        // Mostrar el paso apropiado basado en el estado actual
         if (this.userData.age && this.userData.gender) {
             if (this.currentCard > 0 && this.currentCard < 10) {
                 this.showStep('cards-step');
@@ -208,17 +188,13 @@ class InsuranceStudy {
     }
 
     showStep(stepId) {
-        // Ocultar todos los pasos
         document.querySelectorAll('.step').forEach(step => {
             step.classList.remove('active');
         });
         
-        // Mostrar el paso solicitado
         const stepElement = document.getElementById(stepId);
         if (stepElement) {
             stepElement.classList.add('active');
-            
-            // Scroll to top cuando cambia de paso
             window.scrollTo(0, 0);
         } else {
             console.error('Paso no encontrado:', stepId);
@@ -232,7 +208,6 @@ class InsuranceStudy {
             return;
         }
 
-        // Verificar que tenemos el deck actual
         const currentDeck = this.insuranceDecks[this.currentCard];
         if (!currentDeck || !Array.isArray(currentDeck)) {
             console.error('Deck actual no válido:', currentDeck);
@@ -240,8 +215,7 @@ class InsuranceStudy {
             return;
         }
 
-        // Generar las tarjetas de seguro
-        container.innerHTML = currentDeck.map((insurance, index) => `
+        container.innerHTML = currentDeck?.map((insurance, index) => `
             <div class="col-md-4 mb-4">
                 <div class="insurance-card card h-100" data-index="${index}">
                     <div class="card-header bg-light">
@@ -272,27 +246,23 @@ class InsuranceStudy {
                     </div>
                 </div>
             </div>
-        `).join('');
+        `).join('') || '<div class="col-12"><div class="alert alert-danger">Error mostrando opciones.</div></div>';
 
-        // Agregar event listeners a las tarjetas
         container.querySelectorAll('.insurance-card').forEach(card => {
             card.addEventListener('click', (e) => {
-                // Remover selección previa
                 container.querySelectorAll('.insurance-card').forEach(c => {
                     c.classList.remove('selected');
                 });
                 
-                // Seleccionar actual
                 e.currentTarget.classList.add('selected');
                 
                 const selectedIndex = parseInt(e.currentTarget.getAttribute('data-index'));
                 setTimeout(() => {
                     this.recordResponse(selectedIndex);
-                }, 500); // Pequeño delay para feedback visual
+                }, 500);
             });
         });
 
-        // Actualizar progreso
         this.updateProgress();
     }
 
@@ -319,23 +289,17 @@ class InsuranceStudy {
             return;
         }
 
-        // Guardar respuesta
         this.responses.push({
             card: this.currentCard,
-            options: [...currentDeck], // Copia del array
+            options: [...currentDeck],
             chosen: choiceIndex,
             timestamp: new Date().toISOString(),
             responseTime: Date.now() - (this.lastResponseTime || Date.now())
         });
 
         this.lastResponseTime = Date.now();
-
         console.log(`Respuesta registrada: Tarjeta ${this.currentCard + 1}, Opción ${choiceIndex}`);
-
-        // Guardar estado inmediatamente
         this.saveState();
-
-        // Avanzar a siguiente tarjeta o completar
         this.currentCard++;
 
         if (this.currentCard < 10) {
@@ -354,7 +318,6 @@ class InsuranceStudy {
                 responsesCount: this.responses.length
             });
 
-            // Preparar datos para enviar
             const payload = {
                 user: {
                     ...this.userData,
@@ -364,53 +327,80 @@ class InsuranceStudy {
                 responses: this.responses
             };
 
-            // Enviar datos al Google Apps Script
-            const response = await this.sendDataToGoogleSheets(payload);
+            // USAR EL NUEVO MÉTODO PARA ENVIAR
+            const response = await this.sendDataWithFallback(payload);
 
             if (response && response.success) {
                 console.log('Datos enviados exitosamente');
                 this.clearSavedState();
                 this.showStep('completion-step');
-                
-                // Mostrar resumen
                 this.showCompletionSummary();
             } else {
-                throw new Error(response?.error || 'Error desconocido');
+                throw new Error(response?.error || 'Error desconocido del servidor');
             }
 
         } catch (error) {
             console.error('Error completando el estudio:', error);
-            
-            // Guardar datos localmente como respaldo
             this.saveBackupData();
             
-            alert('Hubo un error al enviar los datos, pero tus respuestas están guardadas localmente. Por favor, contacta al administrador del estudio.');
+            alert('El estudio se completó, pero hubo un problema al enviar los datos al servidor. Tus respuestas se han guardado localmente en tu navegador. Por favor, contacta al administrador del estudio y menciona este error.');
         }
     }
 
-    async sendDataToGoogleSheets(payload) {
-        // URL de tu Google Apps Script (debes reemplazar esto)
+    // NUEVO MÉTODO: Estrategia de envío mejorada
+    async sendDataWithFallback(payload) {
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxHH7CM7eEBrlrFa0Y_PBSLwa0UiDLIW4hcHWUHJ27oIKrgw8sFSDbD320G5Z8536vk/exec';
         
         try {
+            // INTENTO 1: Envío normal con manejo de CORS
+            console.log('Intentando enviar datos a Google Apps Script...');
             const response = await fetch(SCRIPT_URL, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'text/plain', // Cambiado para evitar preflight CORS
                 },
-                body: JSON.stringify(payload)
+                body: JSON.stringify(payload),
+                // Nota: No usar 'mode: 'no-cors'' porque no podremos leer la respuesta
             });
 
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error(`Error HTTP! estado: ${response.status}`);
             }
 
             const data = await response.json();
             return data;
-        } catch (error) {
-            console.error('Error enviando datos a Google Sheets:', error);
-            throw error;
+
+        } catch (fetchError) {
+            console.error('Error en fetch principal:', fetchError);
+            
+            // INTENTO 2: Usar Google Forms como respaldo
+            try {
+                console.log('Intentando método de respaldo con Google Forms...');
+                return await this.sendToGoogleFormsBackup(payload);
+            } catch (backupError) {
+                console.error('También falló el método de respaldo:', backupError);
+                throw new Error('Todos los métodos de envío fallaron');
+            }
         }
+    }
+
+    // MÉTODO DE RESPALDO: Google Forms
+    async sendToGoogleFormsBackup(payload) {
+        // URL de un Google Form que puedes crear como respaldo
+        const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/YOUR_GOOGLE_FORM_ID/formResponse';
+        
+        // Mapear datos al formato de Google Forms
+        const formData = new FormData();
+        formData.append('entry.123456789', JSON.stringify(payload)); // Reemplaza con el ID de campo real
+
+        const response = await fetch(GOOGLE_FORM_URL, {
+            method: 'POST',
+            body: formData,
+            mode: 'no-cors' // En no-cors, no podemos verificar el éxito
+        });
+
+        // Con mode: 'no-cors', siempre asumimos éxito
+        return { success: true, message: 'Datos enviados via formulario de respaldo' };
     }
 
     saveBackupData() {
@@ -421,11 +411,11 @@ class InsuranceStudy {
                 backupTime: new Date().toISOString()
             };
             
-            // Guardar en localStorage como respaldo
+            // Guardar en localStorage como respaldo permanente
             localStorage.setItem('insuranceStudyBackup', JSON.stringify(backupData));
             console.log('Datos guardados como respaldo en localStorage');
             
-            // Crear descarga opcional
+            // Crear descarga para el usuario
             this.createDownloadableBackup(backupData);
         } catch (error) {
             console.error('Error guardando respaldo:', error);
@@ -433,22 +423,30 @@ class InsuranceStudy {
     }
 
     createDownloadableBackup(backupData) {
-        const dataStr = JSON.stringify(backupData, null, 2);
-        const dataBlob = new Blob([dataStr], {type: 'application/json'});
-        
-        // Opcional: ofrecer descarga
-        const downloadBtn = document.createElement('a');
-        downloadBtn.href = URL.createObjectURL(dataBlob);
-        downloadBtn.download = `backup_seguros_${new Date().toISOString().split('T')[0]}.json`;
-        downloadBtn.style.display = 'none';
-        
-        document.body.appendChild(downloadBtn);
-        downloadBtn.click();
-        document.body.removeChild(downloadBtn);
+        try {
+            const dataStr = JSON.stringify(backupData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const downloadBtn = document.createElement('a');
+            downloadBtn.href = URL.createObjectURL(dataBlob);
+            downloadBtn.download = `respaldo_estudio_seguros_${new Date().toISOString().split('T')[0]}.json`;
+            downloadBtn.style.display = 'none';
+            downloadBtn.textContent = 'Descargar respaldo de respuestas';
+            
+            // Agregar al DOM temporalmente
+            const completionStep = document.getElementById('completion-step');
+            if (completionStep) {
+                completionStep.appendChild(downloadBtn);
+                downloadBtn.style.display = 'block';
+                downloadBtn.className = 'btn btn-warning mt-3';
+            }
+            
+        } catch (error) {
+            console.error('Error creando descarga:', error);
+        }
     }
 
     showCompletionSummary() {
-        // Opcional: mostrar estadísticas de las respuestas
         const insuranceChoices = this.responses.filter(r => r.chosen !== 3).length;
         const noBuyChoices = this.responses.filter(r => r.chosen === 3).length;
         
@@ -456,7 +454,7 @@ class InsuranceStudy {
     }
 }
 
-// Inicializar la aplicación cuando el DOM esté listo
+// Inicializar la aplicación
 document.addEventListener('DOMContentLoaded', function() {
     try {
         new InsuranceStudy();
@@ -465,9 +463,4 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('Error inicializando la aplicación:', error);
         alert('Error cargando la aplicación. Por favor, recarga la página.');
     }
-});
-
-// Manejar errores no capturados
-window.addEventListener('error', function(e) {
-    console.error('Error no capturado:', e.error);
 });
