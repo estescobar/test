@@ -1,17 +1,24 @@
+'use strict';
+
 class InsuranceStudy {
     constructor() {
         const savedState = this.loadSavedState();
         this.currentCard = savedState.currentCard || 0;
         this.responses = savedState.responses || [];
         this.userData = savedState.userData || {};
+        this.lastResponseTime = savedState.lastResponseTime || null;
+
+        // URL del endpoint de Google Apps Script (Web App desplegado como "Anyone")
+        this.SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxHH7CM7eEBrlrFa0Y_PBSLwa0UiDLIW4hcHWUHJ27oIKrgw8sFSDbD320G5Z8536vk/exec';
+
         this.insuranceDecks = this.generateInsuranceDecks();
-        
+
         console.log('Estado cargado:', {
             currentCard: this.currentCard,
             responsesCount: this.responses.length,
             userData: this.userData
         });
-        
+
         this.initializeEventListeners();
         this.showCurrentStep();
     }
@@ -31,7 +38,8 @@ class InsuranceStudy {
             const state = {
                 currentCard: this.currentCard,
                 responses: this.responses,
-                userData: this.userData
+                userData: this.userData,
+                lastResponseTime: this.lastResponseTime
             };
             sessionStorage.setItem('insuranceStudyState', JSON.stringify(state));
         } catch (error) {
@@ -68,12 +76,12 @@ class InsuranceStudy {
             [
                 {prima: 180, suma: 25000, copago: 0.3},
                 {prima: 120, suma: 15000, copago: 0.4},
-                {prima: 80, suma: 10000, copago: 0.5}
+                {prima: 80,  suma: 10000, copago: 0.5}
             ],
             [
                 {prima: 600, suma: 150000, copago: 0.05},
-                {prima: 350, suma: 80000, copago: 0.1},
-                {prima: 200, suma: 40000, copago: 0.2}
+                {prima: 350, suma: 80000,  copago: 0.1},
+                {prima: 200, suma: 40000,  copago: 0.2}
             ],
             [
                 {prima: 320, suma: 55000, copago: 0.1},
@@ -82,8 +90,8 @@ class InsuranceStudy {
             ],
             [
                 {prima: 450, suma: 120000, copago: 0.15},
-                {prima: 300, suma: 75000, copago: 0.2},
-                {prima: 190, suma: 45000, copago: 0.25}
+                {prima: 300, suma: 75000,  copago: 0.2},
+                {prima: 190, suma: 45000,  copago: 0.25}
             ],
             [
                 {prima: 280, suma: 60000, copago: 0.15},
@@ -93,12 +101,12 @@ class InsuranceStudy {
             [
                 {prima: 700, suma: 200000, copago: 0.05},
                 {prima: 450, suma: 120000, copago: 0.1},
-                {prima: 300, suma: 70000, copago: 0.15}
+                {prima: 300, suma: 70000,  copago: 0.15}
             ],
             [
                 {prima: 150, suma: 30000, copago: 0.25},
                 {prima: 100, suma: 20000, copago: 0.35},
-                {prima: 70, suma: 15000, copago: 0.45}
+                {prima: 70,  suma: 15000, copago: 0.45}
             ]
         ];
     }
@@ -122,12 +130,14 @@ class InsuranceStudy {
         const noBuyBtn = document.getElementById('no-buy');
         if (noBuyBtn) {
             noBuyBtn.addEventListener('click', () => {
+                // Convención: 3 representa "No comprar"
                 this.recordResponse(3);
             });
         }
 
         window.addEventListener('beforeunload', (e) => {
-            if (this.currentCard > 0 && this.currentCard < 10) {
+            if (this.userData.age && this.userData.gender &&
+                this.currentCard > 0 && this.currentCard < 10) {
                 e.preventDefault();
                 e.returnValue = 'Tienes respuestas sin completar. ¿Estás seguro de que quieres salir?';
                 return e.returnValue;
@@ -142,12 +152,11 @@ class InsuranceStudy {
             startTime: new Date().toISOString()
         };
 
-        const age = parseInt(this.userData.age);
-        if (age < 18 || age > 80) {
+        const age = parseInt(this.userData.age, 10);
+        if (Number.isNaN(age) || age < 18 || age > 80) {
             alert('Por favor, ingresa una edad válida entre 18 y 80 años.');
             return;
         }
-
         if (!this.userData.gender) {
             alert('Por favor, selecciona tu género.');
             return;
@@ -162,11 +171,16 @@ class InsuranceStudy {
             if (confirm('Ya completaste este estudio. ¿Quieres empezar de nuevo?')) {
                 this.currentCard = 0;
                 this.responses = [];
+                this.lastResponseTime = null;
                 this.clearSavedState();
             } else {
                 return;
             }
         }
+
+        // Inicializa el cronómetro de la primera respuesta
+        this.lastResponseTime = Date.now();
+        this.saveState();
 
         this.showStep('cards-step');
         this.displayCurrentCard();
@@ -191,7 +205,7 @@ class InsuranceStudy {
         document.querySelectorAll('.step').forEach(step => {
             step.classList.remove('active');
         });
-        
+
         const stepElement = document.getElementById(stepId);
         if (stepElement) {
             stepElement.classList.add('active');
@@ -215,7 +229,7 @@ class InsuranceStudy {
             return;
         }
 
-        container.innerHTML = currentDeck?.map((insurance, index) => `
+        container.innerHTML = currentDeck.map((insurance, index) => `
             <div class="col-md-4 mb-4">
                 <div class="insurance-card card h-100" data-index="${index}">
                     <div class="card-header bg-light">
@@ -223,21 +237,21 @@ class InsuranceStudy {
                     </div>
                     <div class="card-body d-flex flex-column">
                         <div class="mb-3 text-center">
-                            <div class="display-6 text-primary">$${insurance.prima}</div>
+                            <div class="display-6 text-primary">$${insurance.prima.toLocaleString()}</div>
                             <small class="text-muted">por mes</small>
                         </div>
-                        
+
                         <div class="mb-2">
                             <strong>🏥 Cobertura Máxima:</strong>
                             <div class="fs-5 text-success">$${insurance.suma.toLocaleString()}</div>
                         </div>
-                        
+
                         <div class="mb-3">
                             <strong>💵 Copago:</strong>
-                            <div class="fs-6 text-warning">${(insurance.copago * 100)}%</div>
-                            <small class="text-muted">Tú pagas ${(insurance.copago * 100)}% de cada siniestro</small>
+                            <div class="fs-6 text-warning">${(insurance.copago * 100).toFixed(0)}%</div>
+                            <small class="text-muted">Tú pagas ${(insurance.copago * 100).toFixed(0)}% de cada siniestro</small>
                         </div>
-                        
+
                         <div class="mt-auto">
                             <div class="alert alert-info small">
                                 <strong>💡 Ejemplo:</strong> Con un tratamiento de $1,000, tú pagas $${(1000 * insurance.copago).toFixed(0)}
@@ -246,17 +260,17 @@ class InsuranceStudy {
                     </div>
                 </div>
             </div>
-        `).join('') || '<div class="col-12"><div class="alert alert-danger">Error mostrando opciones.</div></div>';
+        `).join('');
 
         container.querySelectorAll('.insurance-card').forEach(card => {
             card.addEventListener('click', (e) => {
                 container.querySelectorAll('.insurance-card').forEach(c => {
                     c.classList.remove('selected');
                 });
-                
+
                 e.currentTarget.classList.add('selected');
-                
-                const selectedIndex = parseInt(e.currentTarget.getAttribute('data-index'));
+
+                const selectedIndex = parseInt(e.currentTarget.getAttribute('data-index'), 10);
                 setTimeout(() => {
                     this.recordResponse(selectedIndex);
                 }, 500);
@@ -269,11 +283,11 @@ class InsuranceStudy {
     updateProgress() {
         const currentCardElement = document.getElementById('current-card');
         const progressBar = document.getElementById('progress-bar');
-        
+
         if (currentCardElement) {
             currentCardElement.textContent = this.currentCard + 1;
         }
-        
+
         if (progressBar) {
             const progress = ((this.currentCard + 1) / 10) * 100;
             progressBar.style.width = `${progress}%`;
@@ -283,21 +297,26 @@ class InsuranceStudy {
 
     recordResponse(choiceIndex) {
         const currentDeck = this.insuranceDecks[this.currentCard];
-        
+
         if (!currentDeck) {
             console.error('No hay deck actual para registrar respuesta');
             return;
         }
 
+        const now = Date.now();
+        const responseTime = this.lastResponseTime ? (now - this.lastResponseTime) : 0;
+
         this.responses.push({
             card: this.currentCard,
             options: [...currentDeck],
-            chosen: choiceIndex,
+            chosen: choiceIndex,                 // 0,1,2 ó 3 (No comprar)
             timestamp: new Date().toISOString(),
-            responseTime: Date.now() - (this.lastResponseTime || Date.now())
+            responseTime: responseTime
         });
 
-        this.lastResponseTime = Date.now();
+        // Reinicia cronómetro para la próxima tarjeta
+        this.lastResponseTime = now;
+
         console.log(`Respuesta registrada: Tarjeta ${this.currentCard + 1}, Opción ${choiceIndex}`);
         this.saveState();
         this.currentCard++;
@@ -327,78 +346,61 @@ class InsuranceStudy {
                 responses: this.responses
             };
 
-            // USAR EL NUEVO MÉTODO PARA ENVIAR
-            const response = await this.sendDataWithFallback(payload);
+            // Envío con estrategia sin CORS: sendBeacon -> fetch(no-cors)
+            const response = await this.sendDataNoCors(payload);
 
             if (response && response.success) {
-                console.log('Datos enviados exitosamente');
+                console.log('Datos enviados (sin CORS) con éxito');
                 this.clearSavedState();
                 this.showStep('completion-step');
                 this.showCompletionSummary();
             } else {
-                throw new Error(response?.error || 'Error desconocido del servidor');
+                throw new Error('No se pudo confirmar el envío (sin CORS)');
             }
-
         } catch (error) {
             console.error('Error completando el estudio:', error);
             this.saveBackupData();
-            
-            alert('El estudio se completó, pero hubo un problema al enviar los datos al servidor. Tus respuestas se han guardado localmente en tu navegador. Por favor, contacta al administrador del estudio y menciona este error.');
+
+            alert('El estudio se completó, pero hubo un problema al enviar los datos al servidor. ' +
+                  'Tus respuestas se han guardado localmente en tu navegador. ' +
+                  'Por favor, contacta al administrador del estudio y menciona este error.');
         }
     }
 
-    // NUEVO MÉTODO: Estrategia de envío mejorada
-async sendDataWithFallback(payload) {
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxHH7CM7eEBrlrFa0Y_PBSLwa0UiDLIW4hcHWUHJ27oIKrgw8sFSDbD320G5Z8536vk/exec';
+    /**
+     * Estrategia de envío sin CORS:
+     * 1) Intentar navigator.sendBeacon (no bloquea unload, ideal para "fin del estudio")
+     * 2) Si no disponible o falla, fetch con mode: "no-cors" (respuesta opaca, asumimos éxito)
+     */
+    async sendDataNoCors(payload) {
+        try {
+            // 1) Intento con sendBeacon (mejor para envíos al terminar)
+            const beaconOk = navigator.sendBeacon(
+                this.SCRIPT_URL,
+                new Blob([JSON.stringify(payload)], { type: 'text/plain' }) // text/plain evita preflight
+            );
+            if (beaconOk) {
+                return { success: true, message: 'Datos enviados con sendBeacon' };
+            }
+        } catch (e) {
+            console.warn('sendBeacon no disponible/falló:', e);
+        }
 
-  try {
-    // Opción A: sendBeacon (ideal para "fin del estudio")
-    const ok = navigator.sendBeacon(
-      SCRIPT_URL,
-      new Blob([JSON.stringify(payload)], { type: 'text/plain' })
-    );
-    if (ok) return { success: true, message: 'Datos enviados con sendBeacon' };
-
-    // Opción B: fetch en no-cors (respuesta opaca)
-    await fetch(SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain' }, // evita preflight
-      body: JSON.stringify(payload),
-    });
-    // No puedes leer response -> asume éxito
-    return { success: true, message: 'Datos enviados en no-cors (respuesta opaca)' };
-
-  } catch (fetchError) {
-    console.error('Error en envío principal:', fetchError);
-    // respaldo a Google Forms
-    try {
-      return await this.sendToGoogleFormsBackup(payload);
-    } catch (backupError) {
-      console.error('También falló el respaldo:', backupError);
-      throw new Error('Todos los métodos de envío fallaron');
-    }
-  }
-}
-
-
-    // MÉTODO DE RESPALDO: Google Forms
-    async sendToGoogleFormsBackup(payload) {
-        // URL de un Google Form que puedes crear como respaldo
-        const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/YOUR_GOOGLE_FORM_ID/formResponse';
-        
-        // Mapear datos al formato de Google Forms
-        const formData = new FormData();
-        formData.append('entry.123456789', JSON.stringify(payload)); // Reemplaza con el ID de campo real
-
-        const response = await fetch(GOOGLE_FORM_URL, {
-            method: 'POST',
-            body: formData,
-            mode: 'no-cors' // En no-cors, no podemos verificar el éxito
-        });
-
-        // Con mode: 'no-cors', siempre asumimos éxito
-        return { success: true, message: 'Datos enviados via formulario de respaldo' };
+        // 2) Respaldo: fetch en no-cors (no podemos leer respuesta → asumimos éxito)
+        try {
+            await fetch(this.SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'text/plain' // evita preflight CORS
+                },
+                body: JSON.stringify(payload)
+            });
+            return { success: true, message: 'Datos enviados con fetch no-cors (respuesta opaca)' };
+        } catch (e2) {
+            console.error('Error en fetch no-cors:', e2);
+            throw e2;
+        }
     }
 
     saveBackupData() {
@@ -408,11 +410,11 @@ async sendDataWithFallback(payload) {
                 responses: this.responses,
                 backupTime: new Date().toISOString()
             };
-            
+
             // Guardar en localStorage como respaldo permanente
             localStorage.setItem('insuranceStudyBackup', JSON.stringify(backupData));
             console.log('Datos guardados como respaldo en localStorage');
-            
+
             // Crear descarga para el usuario
             this.createDownloadableBackup(backupData);
         } catch (error) {
@@ -423,22 +425,22 @@ async sendDataWithFallback(payload) {
     createDownloadableBackup(backupData) {
         try {
             const dataStr = JSON.stringify(backupData, null, 2);
-            const dataBlob = new Blob([dataStr], {type: 'application/json'});
-            
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+
             const downloadBtn = document.createElement('a');
             downloadBtn.href = URL.createObjectURL(dataBlob);
             downloadBtn.download = `respaldo_estudio_seguros_${new Date().toISOString().split('T')[0]}.json`;
             downloadBtn.style.display = 'none';
             downloadBtn.textContent = 'Descargar respaldo de respuestas';
-            
-            // Agregar al DOM temporalmente
+
             const completionStep = document.getElementById('completion-step');
             if (completionStep) {
                 completionStep.appendChild(downloadBtn);
-                downloadBtn.style.display = 'block';
                 downloadBtn.className = 'btn btn-warning mt-3';
+                downloadBtn.style.display = 'block';
+                // Dispara la descarga automáticamente
+                setTimeout(() => downloadBtn.click(), 300);
             }
-            
         } catch (error) {
             console.error('Error creando descarga:', error);
         }
@@ -447,7 +449,7 @@ async sendDataWithFallback(payload) {
     showCompletionSummary() {
         const insuranceChoices = this.responses.filter(r => r.chosen !== 3).length;
         const noBuyChoices = this.responses.filter(r => r.chosen === 3).length;
-        
+
         console.log(`Resumen: ${insuranceChoices} seguros elegidos, ${noBuyChoices} veces "No Comprar"`);
     }
 }
