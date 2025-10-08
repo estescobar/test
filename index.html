@@ -2,7 +2,8 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Estudio de Preferencias de Seguros</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudio de Preferencias de Seguros - Hackatón Actuarial</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .insurance-card {
@@ -10,83 +11,218 @@
             border-radius: 10px;
             transition: all 0.3s ease;
             cursor: pointer;
+            min-height: 200px;
         }
         .insurance-card:hover {
             border-color: #007bff;
             transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         .insurance-card.selected {
             border-color: #28a745;
             background-color: #f8fff9;
+            transform: scale(1.02);
+        }
+        .step {
+            display: none;
+        }
+        .step.active {
+            display: block;
         }
         .progress-bar {
             transition: width 0.5s ease;
         }
+        .card-highlight {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .concept-badge {
+            background-color: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 15px;
+            padding: 8px 15px;
+            margin: 5px;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
-    <div class="container mt-5">
+    <div class="container mt-4 mb-5">
         <!-- Paso 1: Datos Demográficos -->
-        <div id="demographic-step" class="step">
-            <h2>Información Demográfica</h2>
-            <form id="demographic-form">
-                <div class="mb-3">
-                    <label for="age" class="form-label">Edad</label>
-                    <input type="number" class="form-control" id="age" min="18" max="80" required>
+        <div id="demographic-step" class="step active">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card card-highlight">
+                        <div class="card-body text-center">
+                            <h1 class="card-title">🏥 Estudio de Preferencias de Seguros</h1>
+                            <p class="lead">Hackatón Actuarial - Universidad</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card mt-4">
+                        <div class="card-body">
+                            <h4>Información Demográfica</h4>
+                            <form id="demographic-form">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="age" class="form-label">Edad</label>
+                                        <input type="number" class="form-control" id="age" min="18" max="80" required>
+                                        <div class="form-text">Debes tener entre 18 y 80 años.</div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="gender" class="form-label">Género</label>
+                                        <select class="form-control" id="gender" required>
+                                            <option value="">Seleccionar...</option>
+                                            <option value="M">Masculino</option>
+                                            <option value="F">Femenino</option>
+                                            <option value="O">Otro/Prefiero no decir</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-lg">Comenzar Estudio</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="gender" class="form-label">Género</label>
-                    <select class="form-control" id="gender" required>
-                        <option value="">Seleccionar...</option>
-                        <option value="M">Masculino</option>
-                        <option value="F">Femenino</option>
-                        <option value="O">Otro/Prefiero no decir</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary">Continuar</button>
-            </form>
+            </div>
         </div>
 
         <!-- Paso 2: Explicación -->
-        <div id="explanation-step" class="step d-none">
-            <h2>¿Cómo Funciona el Estudio?</h2>
-            <div class="card">
-                <div class="card-body">
-                    <h5>Conceptos Clave:</h5>
-                    <ul>
-                        <li><strong>Prima:</strong> Lo que pagas mensualmente por el seguro</li>
-                        <li><strong>Suma Asegurada:</strong> Máximo que cubre el seguro si ocurre un siniestro</li>
-                        <li><strong>Copago:</strong> Porcentaje que pagas tú en cada siniestro</li>
-                    </ul>
-                    <p>Verás 10 tarjetas con 3 opciones de seguro. Elige la que prefieras o "No Comprar".</p>
-                    <button id="start-study" class="btn btn-primary">Comenzar Estudio</button>
+        <div id="explanation-step" class="step">
+            <div class="row justify-content-center">
+                <div class="col-md-10">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2 class="text-center mb-4">📋 ¿Cómo Funciona Este Estudio?</h2>
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-12">
+                                    <h5>Conceptos Clave que Debes Conocer:</h5>
+                                    <div class="d-flex flex-wrap">
+                                        <div class="concept-badge">
+                                            <strong>💰 Prima:</strong> Lo que pagas mensualmente por el seguro
+                                        </div>
+                                        <div class="concept-badge">
+                                            <strong>🛡️ Suma Asegurada:</strong> Máximo que cubre el seguro
+                                        </div>
+                                        <div class="concept-badge">
+                                            <strong>💵 Copago:</strong> % que pagas tú en cada siniestro
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card mb-3">
+                                        <div class="card-header bg-primary text-white">
+                                            <h6>📝 Lo que harás:</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul>
+                                                <li>Verás <strong>10 tarjetas</strong> con opciones de seguro</li>
+                                                <li>Cada tarjeta tiene <strong>3 opciones diferentes</strong></li>
+                                                <li>Elige la opción que prefieras</li>
+                                                <li>Si ninguna te convence, elige <strong>"No Comprar"</strong></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card mb-3">
+                                        <div class="card-header bg-success text-white">
+                                            <h6>🎯 Ejemplo Práctico:</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <p><strong>Opción A:</strong></p>
+                                            <ul class="small">
+                                                <li>Prima: $300/mes</li>
+                                                <li>Cobertura: $50,000</li>
+                                                <li>Copago: 10%</li>
+                                            </ul>
+                                            <p class="small">→ <em>Tú pagas 10% de cada tratamiento médico</em></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-info">
+                                <strong>💡 Tip:</strong> Piensa como si realmente estuvieras comprando un seguro médico. 
+                                No hay respuestas correctas o incorrectas, solo tus preferencias personales.
+                            </div>
+
+                            <div class="text-center">
+                                <button id="start-study" class="btn btn-primary btn-lg">Entendido, ¡Comenzar!</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Paso 3: Tarjetas de Elección -->
-        <div id="cards-step" class="step d-none">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h4>Tarjeta <span id="current-card">1</span> de 10</h4>
-                <div class="progress" style="width: 200px;">
-                    <div id="progress-bar" class="progress-bar" style="width: 10%;"></div>
-                </div>
-            </div>
-            
-            <div id="cards-container">
-                <!-- Las tarjetas se generan dinámicamente -->
-            </div>
+        <div id="cards-step" class="step">
+            <div class="row justify-content-center">
+                <div class="col-md-10">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h4 class="mb-0">Tarjeta <span id="current-card">1</span> de 10</h4>
+                                <div class="progress" style="width: 200px; height: 20px;">
+                                    <div id="progress-bar" class="progress-bar bg-success" style="width: 10%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-            <div class="text-center mt-4">
-                <button id="no-buy" class="btn btn-outline-danger">No Comprar Ningún Seguro</button>
+                    <div class="text-center mb-4">
+                        <h5>Elige la opción de seguro que prefieras:</h5>
+                        <p class="text-muted">Haz clic en la tarjeta de tu preferencia</p>
+                    </div>
+                    
+                    <div id="cards-container" class="row">
+                        <!-- Las tarjetas se generan dinámicamente aquí -->
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button id="no-buy" class="btn btn-outline-danger btn-lg">
+                            🚫 No Comprar Ningún Seguro
+                        </button>
+                    </div>
+
+                    <div class="alert alert-warning mt-3 text-center">
+                        <small>⚠️ Tus respuestas se guardan automáticamente. Puedes recargar la página si es necesario.</small>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- Paso 4: Finalización -->
-        <div id="completion-step" class="step d-none">
-            <div class="alert alert-success text-center">
-                <h4>¡Estudio Completado!</h4>
-                <p>Gracias por tu participación. Tus respuestas han sido guardadas.</p>
+        <div id="completion-step" class="step">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card card-highlight">
+                        <div class="card-body text-center py-5">
+                            <div class="mb-4">
+                                <div style="font-size: 4rem;">🎉</div>
+                            </div>
+                            <h2 class="card-title">¡Estudio Completado!</h2>
+                            <p class="lead">Gracias por tu participación y tiempo.</p>
+                            <div class="alert alert-success mt-4">
+                                <h5>✅ Tus respuestas han sido guardadas exitosamente</h5>
+                                <p class="mb-0">Tu contribución ayuda a mejorar los modelos actuariales para el hackatón.</p>
+                            </div>
+                            <div class="mt-4">
+                                <p><strong>Datos registrados:</strong></p>
+                                <ul class="list-unstyled">
+                                    <li>📊 10 elecciones de seguro</li>
+                                    <li>👤 Datos demográficos</li>
+                                    <li>⏰ Tiempo de respuesta</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -94,4 +230,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
