@@ -115,7 +115,7 @@ class InsuranceStudy {
 
     async completeStudy() {
         try {
-            const response = await fetch('https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec', {
+            const response = await fetch('https://script.google.com/macros/s/AKfycbxHH7CM7eEBrlrFa0Y_PBSLwa0UiDLIW4hcHWUHJ27oIKrgw8sFSDbD320G5Z8536vk/exec', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
