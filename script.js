@@ -348,41 +348,39 @@ class InsuranceStudy {
     }
 
     // NUEVO MÉTODO: Estrategia de envío mejorada
-    async sendDataWithFallback(payload) {
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxHH7CM7eEBrlrFa0Y_PBSLwa0UiDLIW4hcHWUHJ27oIKrgw8sFSDbD320G5Z8536vk/exec';
-        
-        try {
-            // INTENTO 1: Envío normal con manejo de CORS
-            console.log('Intentando enviar datos a Google Apps Script...');
-            const response = await fetch(SCRIPT_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'text/plain', // Cambiado para evitar preflight CORS
-                },
-                body: JSON.stringify(payload),
-                // Nota: No usar 'mode: 'no-cors'' porque no podremos leer la respuesta
-            });
+async sendDataWithFallback(payload) {
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxHH7CM7eEBrlrFa0Y_PBSLwa0UiDLIW4hcHWUHJ27oIKrgw8sFSDbD320G5Z8536vk/exec';
 
-            if (!response.ok) {
-                throw new Error(`Error HTTP! estado: ${response.status}`);
-            }
+  try {
+    // Opción A: sendBeacon (ideal para "fin del estudio")
+    const ok = navigator.sendBeacon(
+      SCRIPT_URL,
+      new Blob([JSON.stringify(payload)], { type: 'text/plain' })
+    );
+    if (ok) return { success: true, message: 'Datos enviados con sendBeacon' };
 
-            const data = await response.json();
-            return data;
+    // Opción B: fetch en no-cors (respuesta opaca)
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' }, // evita preflight
+      body: JSON.stringify(payload),
+    });
+    // No puedes leer response -> asume éxito
+    return { success: true, message: 'Datos enviados en no-cors (respuesta opaca)' };
 
-        } catch (fetchError) {
-            console.error('Error en fetch principal:', fetchError);
-            
-            // INTENTO 2: Usar Google Forms como respaldo
-            try {
-                console.log('Intentando método de respaldo con Google Forms...');
-                return await this.sendToGoogleFormsBackup(payload);
-            } catch (backupError) {
-                console.error('También falló el método de respaldo:', backupError);
-                throw new Error('Todos los métodos de envío fallaron');
-            }
-        }
+  } catch (fetchError) {
+    console.error('Error en envío principal:', fetchError);
+    // respaldo a Google Forms
+    try {
+      return await this.sendToGoogleFormsBackup(payload);
+    } catch (backupError) {
+      console.error('También falló el respaldo:', backupError);
+      throw new Error('Todos los métodos de envío fallaron');
     }
+  }
+}
+
 
     // MÉTODO DE RESPALDO: Google Forms
     async sendToGoogleFormsBackup(payload) {
