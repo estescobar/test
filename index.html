@@ -1,461 +1,97 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <title>DCE Seguros de Salud RD — Encuesta</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="color-scheme" content="dark light">
-  <style>
-    :root{
-      --bg:#0b1020; --fg:#f6f7fb; --muted:#c7ccdb; --card:#121936; --acc:#7aa2ff; --acc2:#00c2a8;
-      --warn:#ffcc00; --red:#ff6b6b; --green:#2ecc71; --line:rgba(255,255,255,0.08);
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif;
-      background:linear-gradient(160deg,#0a1022 0%,#101a3d 100%); color:var(--fg);
-    }
-    .container{max-width:980px; margin:0 auto; padding:24px 16px;}
-    header{padding:24px 0 8px;}
-    h1{font-size:2rem; margin:0 0 8px}
-    h2{font-size:1.2rem; margin:16px 0 8px; color:var(--muted)}
-    p{line-height:1.6; color:#e5e7f2}
-    ul,ol{margin:8px 0 8px 20px}
-    .card{
-      background:rgba(18,25,54,0.9); border:1px solid var(--line);
-      border-radius:16px; box-shadow:0 10px 30px rgba(0,0,0,0.35); padding:16px; margin:16px 0;
-    }
-    .btn{
-      appearance:none; border:0; border-radius:12px; padding:12px 16px; font-weight:600; cursor:pointer;
-      background:linear-gradient(90deg,var(--acc),var(--acc2)); color:#051026; transition:transform .06s ease;
-    }
-    .btn:hover{transform:translateY(-1px)}
-    .btn.secondary{background:#1f2a57; color:var(--fg); border:1px solid var(--line)}
-    .btn.ghost{background:transparent; color:var(--muted); border:1px dashed var(--line)}
-    .muted{color:var(--muted)}
-    .row{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
-    .spacer{flex:1}
-    .progress{height:10px; background:#151d3c; border-radius:8px; overflow:hidden}
-    .progress > div{height:100%; width:0%; background:linear-gradient(90deg,var(--acc),var(--acc2))}
-    table{
-      width:100%; border-collapse:separate; border-spacing:0; overflow:hidden; border-radius:12px;
-      background:#0f1533; border:1px solid var(--line);
-    }
-    th,td{padding:12px 10px; text-align:center}
-    th{background:rgba(255,255,255,0.04); color:#cfe2ff; font-weight:700}
-    tr + tr td{border-top:1px solid rgba(255,255,255,0.07)}
-    .optout{color:#cbd3ee; font-style:italic}
-    .tag{display:inline-block; padding:2px 8px; border-radius:999px; font-size:.8rem; background:#18214d; color:#bcd}
-    .tag.attn{background:#2f1d1d; color:#ffb3b3; border:1px solid rgba(255,0,0,0.25)}
-    footer{margin:32px 0 16px; text-align:center; color:#9aa4c7; font-size:.9rem}
-    .hidden{display:none}
-    .small{font-size:.9rem}
-    .pill{display:inline-flex; gap:8px; align-items:center; border:1px solid var(--line); border-radius:999px; padding:6px 10px}
-    input[type="radio"]{width:18px; height:18px}
-    @media (max-width:700px){
-      th:nth-child(2),td:nth-child(2){white-space:nowrap}
-    }
-    .toast{
-      position:fixed; right:14px; bottom:14px; background:#121a3b; border:1px solid var(--line);
-      color:#cfe2ff; padding:10px 12px; border-radius:10px; box-shadow:0 10px 28px rgba(0,0,0,.35);
-      opacity:.95; font-size:.9rem;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>Estudio de Preferencias de Seguros</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .insurance-card {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .insurance-card:hover {
+            border-color: #007bff;
+            transform: translateY(-2px);
+        }
+        .insurance-card.selected {
+            border-color: #28a745;
+            background-color: #f8fff9;
+        }
+        .progress-bar {
+            transition: width 0.5s ease;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>DCE Seguros de Salud RD — Encuesta</h1>
-      <div class="muted small">12 tareas: <b>10 válidas</b> + <b>2 de control</b>. En cada tarea seleccione <b>una</b> opción.</div>
-    </header>
-
-    <!-- Introducción -->
-    <section id="intro" class="card">
-      <h2>Introducción</h2>
-      <p>
-        Este estudio busca entender cómo las personas valoran <b>prima mensual</b>, <b>suma asegurada</b> y <b>copago</b>
-        en planes complementarios al PBS en República Dominicana. Sus respuestas permitirán estimar sensibilidades
-        (elasticidades) de precio, cobertura (<em>ln</em> suma asegurada) y copago.
-      </p>
-      <h2>Objetivos</h2>
-      <ul>
-        <li>Medir la preferencia relativa por cobertura y copago frente a prima.</li>
-        <li>Estimar elasticidades y disposición a pagar.</li>
-        <li>Verificar consistencia mediante tareas de control (dominancia clara).</li>
-      </ul>
-      <h2>Dinámica</h2>
-      <ol>
-        <li>Verá <b>12 tareas</b>. Cada una muestra <b>3 alternativas</b> y una <b>opción externa (No comprar)</b>.</li>
-        <li>Seleccione <b>exactamente una</b> opción por tarea.</li>
-        <li>La encuesta dura ~5–7 minutos. Se registra el <b>tiempo</b> por tarea (control de calidad).</li>
-      </ol>
-      <div class="card" style="background:#0b1330">
-        <div class="row" style="align-items:flex-start">
-          <input type="checkbox" id="consent" />
-          <label for="consent">Acepto participar de forma voluntaria y confirmo que comprendo la dinámica.</label>
-        </div>
-        <div class="row" style="margin-top:10px">
-          <div class="pill small">
-            <span>Bloque</span>
-            <input id="blockInput" type="number" min="1" step="1" value="1" style="width:70px; background:#18214d; color:#e6edff; border:1px solid var(--line); border-radius:8px; padding:4px 8px">
-            <span>· ID encuestado</span>
-            <input id="ridInput" type="text" placeholder="auto" style="width:140px; background:#18214d; color:#e6edff; border:1px solid var(--line); border-radius:8px; padding:4px 8px">
-          </div>
-          <div class="spacer"></div>
-          <button class="btn" id="startBtn" disabled>Comenzar</button>
-        </div>
-        <div class="muted small">También puedes pasar <code>?block=2&rid=ABC123</code> en la URL.</div>
-      </div>
-    </section>
-
-    <!-- Encuesta -->
-    <section id="survey" class="hidden">
-      <div class="card">
-        <div class="row">
-          <div id="taskHeader" class="tag">Tarea 1 / 12</div>
-          <div id="attnTag" class="tag attn hidden">Control de atención</div>
-          <div class="spacer"></div>
-          <div style="min-width:180px">
-            <div class="progress"><div id="progressBar"></div></div>
-          </div>
+    <div class="container mt-5">
+        <!-- Paso 1: Datos Demográficos -->
+        <div id="demographic-step" class="step">
+            <h2>Información Demográfica</h2>
+            <form id="demographic-form">
+                <div class="mb-3">
+                    <label for="age" class="form-label">Edad</label>
+                    <input type="number" class="form-control" id="age" min="18" max="80" required>
+                </div>
+                <div class="mb-3">
+                    <label for="gender" class="form-label">Género</label>
+                    <select class="form-control" id="gender" required>
+                        <option value="">Seleccionar...</option>
+                        <option value="M">Masculino</option>
+                        <option value="F">Femenino</option>
+                        <option value="O">Otro/Prefiero no decir</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Continuar</button>
+            </form>
         </div>
 
-        <div id="tableWrap" style="margin-top:12px"></div>
-
-        <div class="row" style="margin-top:14px">
-          <div class="muted small" id="orderNote"></div>
-          <div class="spacer"></div>
-          <button class="btn secondary" id="prevBtn">Anterior</button>
-          <button class="btn" id="nextBtn">Siguiente</button>
+        <!-- Paso 2: Explicación -->
+        <div id="explanation-step" class="step d-none">
+            <h2>¿Cómo Funciona el Estudio?</h2>
+            <div class="card">
+                <div class="card-body">
+                    <h5>Conceptos Clave:</h5>
+                    <ul>
+                        <li><strong>Prima:</strong> Lo que pagas mensualmente por el seguro</li>
+                        <li><strong>Suma Asegurada:</strong> Máximo que cubre el seguro si ocurre un siniestro</li>
+                        <li><strong>Copago:</strong> Porcentaje que pagas tú en cada siniestro</li>
+                    </ul>
+                    <p>Verás 10 tarjetas con 3 opciones de seguro. Elige la que prefieras o "No Comprar".</p>
+                    <button id="start-study" class="btn btn-primary">Comenzar Estudio</button>
+                </div>
+            </div>
         </div>
-      </div>
-    </section>
 
-    <!-- Final -->
-    <section id="finish" class="hidden">
-      <div class="card">
-        <h2>¡Gracias!</h2>
-        <p class="small muted">
-          Sus respuestas se han enviado. Puede cerrar esta ventana. (El CSV maestro se acumula en el servidor).
-        </p>
-        <div class="row">
-          <button class="btn secondary" id="backToSurvey">Volver a revisar</button>
-          <div class="spacer"></div>
-          <button class="btn ghost" id="restart">Empezar de nuevo</button>
+        <!-- Paso 3: Tarjetas de Elección -->
+        <div id="cards-step" class="step d-none">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4>Tarjeta <span id="current-card">1</span> de 10</h4>
+                <div class="progress" style="width: 200px;">
+                    <div id="progress-bar" class="progress-bar" style="width: 10%;"></div>
+                </div>
+            </div>
+            
+            <div id="cards-container">
+                <!-- Las tarjetas se generan dinámicamente -->
+            </div>
+
+            <div class="text-center mt-4">
+                <button id="no-buy" class="btn btn-outline-danger">No Comprar Ningún Seguro</button>
+            </div>
         </div>
-      </div>
-    </section>
 
-    <footer>© 2025 Estudio DCE Salud RD — Demostración</footer>
-  </div>
+        <!-- Paso 4: Finalización -->
+        <div id="completion-step" class="step d-none">
+            <div class="alert alert-success text-center">
+                <h4>¡Estudio Completado!</h4>
+                <p>Gracias por tu participación. Tus respuestas han sido guardadas.</p>
+            </div>
+        </div>
+    </div>
 
-  <div id="toast" class="toast hidden">Guardando respuestas…</div>
-
-  <script>
-    // ==========================
-    // CONFIGURACIÓN
-    // ==========================
-    const JSON_PATH = './dce_cards.json'; // Debe existir en el repo (GitHub Pages lo servirá)
-    const API_URL = 'https://script.google.com/macros/s/AKfycbyjfMgoZmGxPk8iT8m-Cnj2OlVBTE6DnCVPPEo120KK2wwjzcNGFq5Jyau-IQCXkWI/exec'; // <-- Pega aquí tu Apps Script Web App
-    const REQUIRED_VALID = 10;
-    const REQUIRED_ATTENTION = 2;
-    const TOTAL_TASKS = REQUIRED_VALID + REQUIRED_ATTENTION;
-
-    // ==========================
-    // ESTADO
-    // ==========================
-    let allValid = [];
-    let allAttention = [];
-    let sampledTasks = [];
-    let taskPointer = 0;
-    let currentStartTime = null;
-    let responses = []; // copia local (por si vuelve atrás)
-    let blockId = 1;
-    let respondentId = '';
-    let unsentQueueKey = 'dce_unsent_rows_v1'; // cola persistente para reintentos
-
-    // ==========================
-    // UTILIDADES
-    // ==========================
-    const $ = sel => document.querySelector(sel);
-    const qs = sel => document.querySelectorAll(sel);
-    const fmtMoney = v => `RD$ ${Number(v).toFixed(2)}`;
-    const shuffle = arr => arr.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
-    const show = (el, flag) => el.classList.toggle('hidden', !flag);
-    const toast = (msg, ms=1800) => {
-      const t = $('#toast'); t.textContent = msg; show(t, true);
-      setTimeout(()=>show(t,false), ms);
-    };
-
-    function getQueryParams(){
-      const u = new URL(window.location.href);
-      const block = parseInt(u.searchParams.get('block') || '0', 10);
-      const rid = (u.searchParams.get('rid') || '').trim();
-      return { block: isNaN(block)?0:block, rid };
-    }
-
-    function localQueueRead() {
-      try { return JSON.parse(localStorage.getItem(unsentQueueKey) || '[]'); }
-      catch(_) { return []; }
-    }
-    function localQueueWrite(arr) {
-      localStorage.setItem(unsentQueueKey, JSON.stringify(arr || []));
-    }
-    function localQueuePush(rows) {
-      const q = localQueueRead(); q.push(...rows); localQueueWrite(q);
-    }
-    async function localQueueFlush() {
-      const q = localQueueRead();
-      if (!q.length) return;
-      try {
-        await postRowsToServer(q);
-        localQueueWrite([]);
-        toast('Cola reenviada correctamente');
-      } catch (e) {
-        console.warn('No se pudo vaciar cola local:', e);
-      }
-    }
-
-    function toCSV(rows) {
-      const header = Object.keys(rows[0]);
-      const escape = (s) => {
-        if (s == null) return '';
-        s = String(s);
-        if (s.includes('"') || s.includes(',') || s.includes('\n')) {
-          return `"${s.replace(/"/g,'""')}"`;
-        }
-        return s;
-      };
-      const lines = [header.join(',')];
-      rows.forEach(r=>lines.push(header.map(k=>escape(r[k])).join(',')));
-      return lines.join('\n');
-    }
-
-    // ==========================
-    // CARGA DE DISEÑO
-    // ==========================
-    async function loadDesign() {
-      const res = await fetch(JSON_PATH, { cache:'no-store' });
-      if (!res.ok) throw new Error('No se pudo cargar dce_cards.json');
-      const data = await res.json();
-      if (!Array.isArray(data.valid_tasks) || !Array.isArray(data.attention_tasks)) {
-        throw new Error('JSON inválido: faltan valid_tasks o attention_tasks');
-      }
-      allValid = data.valid_tasks;
-      allAttention = data.attention_tasks;
-    }
-
-    function sampleTasks() {
-      if (allValid.length < REQUIRED_VALID || allAttention.length < REQUIRED_ATTENTION) {
-        alert('El archivo dce_cards.json no tiene suficientes tareas (válidas y/o de atención).');
-      }
-      const validShuffled = shuffle(allValid).slice(0, REQUIRED_VALID);
-      const attnShuffled  = shuffle(allAttention).slice(0, REQUIRED_ATTENTION);
-      const pool = shuffle([...validShuffled, ...attnShuffled]).map((t, i) => {
-        const alts = shuffle(t.alts.map(a => ({...a})));
-        const optout = { alt_id:0, price:0, S:0, copay:1.0 };
-        return {
-          index: i,
-          task_id: t.task_id ?? (1000 + i),
-          is_attention: !!t.is_attention,
-          alts,
-          optout
-        };
-      });
-      sampledTasks = pool;
-    }
-
-    // ==========================
-    // ENVÍO AL BACKEND
-    // ==========================
-    async function postRowsToServer(rows){
-  // Enviamos JSON como texto plano para evitar preflight CORS
-  const payload = { rows };
-  const res = await fetch(API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify(payload)
-  });
-  if (!res.ok) {
-    const msg = await res.text();
-    throw new Error(msg || 'POST falló');
-  }
-  return true;
-}
-
-    // ==========================
-    // RENDER DE TAREAS
-    // ==========================
-    function renderTask(){
-      const total = sampledTasks.length;
-      const t = sampledTasks[taskPointer];
-      $('#taskHeader').textContent = `Tarea ${taskPointer+1} / ${total}`;
-      show($('#attnTag'), t.is_attention);
-
-      const pct = Math.round(((taskPointer)/total)*100);
-      $('#progressBar').style.width = pct + '%';
-
-      const rows = [...t.alts, t.optout];
-
-      let html = `
-        <table>
-          <thead>
-            <tr>
-              <th>Seleccione</th>
-              <th>Alternativa</th>
-              <th>Prima mensual</th>
-              <th>Suma asegurada</th>
-              <th>Copago %</th>
-            </tr>
-          </thead>
-          <tbody>
-      `;
-      rows.forEach((r, idx) => {
-        const isOpt = r.alt_id === 0;
-        const name = `choice_t${taskPointer}`;
-        const altLabel = isOpt ? 'Opción externa (No comprar)' : `Plan ${idx+1}`;
-        const trClass = isOpt ? ' class="optout"' : '';
-        const Sfmt = isOpt ? '—' : Number(r.S).toLocaleString('es-DO');
-        const Pfmt = isOpt ? '—' : fmtMoney(r.price);
-        const Cfmt = isOpt ? '—' : `${Math.round(100*r.copay)}%`;
-        html += `
-          <tr${trClass}>
-            <td><input type="radio" name="${name}" value="${r.alt_id}"></td>
-            <td>${altLabel}</td>
-            <td>${Pfmt}</td>
-            <td>${Sfmt}</td>
-            <td>${Cfmt}</td>
-          </tr>
-        `;
-      });
-      html += `</tbody></table>`;
-      $('#tableWrap').innerHTML = html;
-
-      const shownOrder = rows.map((r,idx)=>(r.alt_id===0?'optout':`Plan ${idx+1}`)).join(' · ');
-      $('#orderNote').textContent = `Orden mostrado: ${shownOrder}`;
-
-      // restaurar selección si ya estaba
-      const existing = responses.find(x=>x.task_id===t.task_id && x.chosen===1);
-      if (existing) {
-        const ipt = document.querySelector(`input[name="choice_t${taskPointer}"][value="${existing.alt_id}"]`);
-        if (ipt) ipt.checked = true;
-      }
-
-      currentStartTime = performance.now();
-    }
-
-    function ensureAnswerOrWarn(){
-      const ipt = document.querySelector(`input[name="choice_t${taskPointer}"]:checked`);
-      if (!ipt) { alert('Por favor seleccione una opción para continuar.'); return null; }
-      return Number(ipt.value);
-    }
-
-    async function saveCurrentTask(choiceAltId){
-      const t = sampledTasks[taskPointer];
-      const elapsed = (performance.now() - currentStartTime)/1000;
-      const rows = [...t.alts, t.optout];
-
-      const taskRows = rows.map((r, idx) => {
-        const isOpt = r.alt_id === 0;
-        const price = r.price ?? 0;
-        const S = r.S ?? 0;
-        const copay = r.copay ?? 1.0;
-        const lnS = S>0 ? Math.log(S) : '';
-        const generosity = S>0 ? (1-copay) : '';
-        const shown_order = isOpt ? 'optout' : (idx+1);
-        return {
-          resp_id: respondentId,
-          block_id: blockId,
-          task_id: t.task_id,
-          alt_id: r.alt_id,
-          chosen: Number(choiceAltId === r.alt_id),
-          price, S, copay, lnS, generosity,
-          is_optout: Number(isOpt),
-          is_attention_task: Number(t.is_attention),
-          shown_order,
-          response_time_sec: elapsed.toFixed(2),
-          ts_iso: new Date().toISOString(),
-          user_agent: navigator.userAgent
-        };
-      });
-
-      // reemplaza en memoria (permite ir hacia atrás)
-      responses = responses.filter(x => x.task_id !== t.task_id).concat(taskRows);
-
-      // Enviar al backend + fallback a cola local
-      try {
-        show($('#toast'), true); $('#toast').textContent = 'Guardando respuestas…';
-        await postRowsToServer(taskRows);
-        $('#toast').textContent = 'Respuestas guardadas';
-        setTimeout(()=>show($('#toast'), false), 1200);
-      } catch (e) {
-        console.warn('Fallo al enviar, guardo en cola local', e);
-        localQueuePush(taskRows);
-        toast('Sin conexión. Se guardó en cola local y se reenviará.');
-      }
-    }
-
-    // ==========================
-    // EVENTOS
-    // ==========================
-    $('#consent').addEventListener('change', e=>{
-      $('#startBtn').disabled = !e.target.checked;
-    });
-
-    $('#startBtn').addEventListener('click', async ()=>{
-      // block y rid desde inputs o query
-      const qp = getQueryParams();
-      blockId = qp.block || parseInt($('#blockInput').value,10) || 1;
-      const ridFromInput = ($('#ridInput').value || '').trim();
-      respondentId = qp.rid || ridFromInput || String(Math.floor(Math.random()*1e9));
-
-      try {
-        await loadDesign();
-      } catch (e) {
-        alert('No se pudo cargar el diseño de tarjetas (dce_cards.json). Revisa el repositorio.');
-        return;
-      }
-      sampleTasks();
-      $('#intro').classList.add('hidden');
-      $('#survey').classList.remove('hidden');
-      taskPointer = 0; responses = [];
-      renderTask();
-
-      // intenta vaciar cola local al iniciar
-      setTimeout(localQueueFlush, 800);
-    });
-
-    $('#prevBtn').addEventListener('click', async ()=>{
-      if (taskPointer <= 0) return;
-      const selected = document.querySelector(`input[name="choice_t${taskPointer}"]:checked`);
-      if (selected) await saveCurrentTask(Number(selected.value));
-      taskPointer--; renderTask();
-    });
-
-    $('#nextBtn').addEventListener('click', async ()=>{
-      const choice = ensureAnswerOrWarn(); if (choice==null) return;
-      await saveCurrentTask(choice);
-      if (taskPointer < sampledTasks.length-1) {
-        taskPointer++; renderTask();
-      } else {
-        $('#survey').classList.add('hidden');
-        $('#finish').classList.remove('hidden');
-        // último intento de vaciar cola
-        setTimeout(localQueueFlush, 500);
-      }
-    });
-
-    $('#backToSurvey').addEventListener('click', ()=>{
-      $('#finish').classList.add('hidden');
-      $('#survey').classList.remove('hidden');
-      renderTask();
-    });
-
-    $('#restart').addEventListener('click', ()=>{
-      window.location.href = window.location.pathname; // recargar limpio
-    });
-  </script>
+    <script src="script.js"></script>
 </body>
 </html>
-
 
