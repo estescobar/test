@@ -9,7 +9,7 @@ class InsuranceStudy {
     this.lastResponseTime = savedState.lastResponseTime || null;
 
     // Tu Web App (nuevo deployment)
-    this.SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby9dgdSn4KY75SojsfELoLAEvfkaWjrgurWUBJ0uj42dh40raDmL22bhSIDL7ACVgHc/exec';
+    this.SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzNtnK_Bpb5PNK5cNe0uumhK00-5zW5T0SKKHIq_ncboTTu7BAxZUeBoj1t0HQXchKJ/exec';
 
     this.insuranceDecks = this.generateInsuranceDecks();
     this.initializeEventListeners();
