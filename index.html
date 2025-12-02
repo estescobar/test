@@ -48,11 +48,12 @@
 </head>
 <body>
     <div class="container mt-4 mb-5">
-        <!-- Paso 1: Datos Demográficos -->
+        <!-- Paso 1: Intro + Datos Demográficos -->
         <div id="demographic-step" class="step active">
             <div class="row justify-content-center">
                 <div class="col-md-8">
-                    <div class="card card-highlight">
+                    <!-- Tarjeta introductoria (primero que ve el usuario) -->
+                    <div id="intro-card" class="card card-highlight mb-4">
                         <div class="card-body text-center">
                             <h1 class="card-title">Estudio de Preferencias de Seguros</h1>
                             <p class="lead mb-2">Hackatón Actuarial - Universidad</p>
@@ -60,15 +61,19 @@
                                 Este estudio busca entender cómo las personas eligen entre diferentes opciones de
                                 seguros de salud con distintas primas, coberturas y copagos.
                             </p>
-                            <p class="mb-0 small">
+                            <p class="mb-3 small">
                                 Primero te haremos algunas preguntas generales sobre ti y luego te mostraremos varias
                                 tarjetas con opciones de seguro para que elijas la que prefieras (o “No comprar”).
                                 La participación es anónima y tomará aproximadamente entre 3 y 6 minutos.
                             </p>
+                            <button id="intro-continue" class="btn btn-light btn-lg">
+                                Continuar
+                            </button>
                         </div>
                     </div>
                     
-                    <div class="card mt-4">
+                    <!-- Tarjeta de datos demográficos (se muestra después) -->
+                    <div id="demographic-card" class="card mt-4 d-none">
                       <div class="card-body">
                         <h4>Información Demográfica</h4>
                         <div class="form-text">Debes tener entre 18 y 80 años.</div>
@@ -302,6 +307,22 @@
             </div>
         </div>
     </div>
+
+    <!-- Pequeño script para pasar de intro → demográficos -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        var btn = document.getElementById('intro-continue');
+        var intro = document.getElementById('intro-card');
+        var demo = document.getElementById('demographic-card');
+        if (btn && intro && demo) {
+          btn.addEventListener('click', function () {
+            intro.classList.add('d-none');
+            demo.classList.remove('d-none');
+            window.scrollTo(0, 0);
+          });
+        }
+      });
+    </script>
 
     <script src="script.js"></script>
 </body>
