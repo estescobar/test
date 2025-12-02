@@ -60,28 +60,94 @@
                     </div>
                     
                     <div class="card mt-4">
-                        <div class="card-body">
-                            <h4>Información Demográfica</h4>
-                            <form id="demographic-form">
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label for="age" class="form-label">Edad</label>
-                                        <input type="number" class="form-control" id="age" min="18" max="80" required>
-                                        <div class="form-text">Debes tener entre 18 y 80 años.</div>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="gender" class="form-label">Género</label>
-                                        <select class="form-control" id="gender" required>
-                                            <option value="">Seleccionar...</option>
-                                            <option value="M">Masculino</option>
-                                            <option value="F">Femenino</option>
-                                            <option value="O">Otro/Prefiero no decir</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-primary btn-lg">Comenzar Estudio</button>
-                            </form>
-                        </div>
+                      <div class="card-body">
+                        <h4>Información Demográfica</h4>
+                        <form id="demographic-form">
+                          <div class="row">
+                            <!-- Edad -->
+                            <div class="col-md-6 mb-3">
+                              <label for="age" class="form-label">Edad</label>
+                              <input type="number" class="form-control" id="age" min="18" max="80" required>
+                              <div class="form-text">Debes tener entre 18 y 80 años.</div>
+                            </div>
+                    
+                            <!-- Género -->
+                            <div class="col-md-6 mb-3">
+                              <label for="gender" class="form-label">Género</label>
+                              <select class="form-control" id="gender" required>
+                                <option value="">Seleccionar...</option>
+                                <option value="M">Masculino</option>
+                                <option value="F">Femenino</option>
+                                <option value="O">Otro / Prefiero no decir</option>
+                              </select>
+                            </div>
+                          </div>
+                    
+                          <div class="row">
+                            <!-- Ingreso mensual -->
+                            <div class="col-md-6 mb-3">
+                              <label for="income" class="form-label">Ingreso mensual aproximado</label>
+                              <select class="form-control" id="income" required>
+                                <option value="">Seleccionar...</option>
+                                <option value="menos_25k">Menos de RD$25,000</option>
+                                <option value="25k_40k">RD$25,000 – RD$40,000</option>
+                                <option value="40k_60k">RD$40,000 – RD$60,000</option>
+                                <option value="mas_60k">Más de RD$60,000</option>
+                              </select>
+                            </div>
+                    
+                            <!-- Frecuencia de uso del sistema de salud -->
+                            <div class="col-md-6 mb-3">
+                              <label for="visits" class="form-label">
+                                En los últimos 12 meses, ¿cuántas veces has ido al médico?
+                              </label>
+                              <select class="form-control" id="visits" required>
+                                <option value="">Seleccionar...</option>
+                                <option value="0">0 veces</option>
+                                <option value="1_2">1–2 veces</option>
+                                <option value="3_5">3–5 veces</option>
+                                <option value="mas_5">Más de 5 veces</option>
+                              </select>
+                            </div>
+                          </div>
+                    
+                          <!-- Preferencia prima / cobertura -->
+                          <div class="mb-3">
+                            <label class="form-label">¿Cuál frase te describe mejor?</label>
+                    
+                            <div class="form-check">
+                              <input class="form-check-input" type="radio"
+                                     name="preference" id="pref_full"
+                                     value="seguro_caro_cubre_todo" required>
+                              <label class="form-check-label" for="pref_full">
+                                Prefiero un seguro caro pero que cubra todos los eventos
+                                (consultas, medicamentos, procedimientos).
+                              </label>
+                            </div>
+                    
+                            <div class="form-check">
+                              <input class="form-check-input" type="radio"
+                                     name="preference" id="pref_cheap"
+                                     value="seguro_barato_cubro_menores">
+                              <label class="form-check-label" for="pref_cheap">
+                                Prefiero un seguro barato aunque yo tenga que cubrir algunos
+                                eventos de menor precio.
+                              </label>
+                            </div>
+                    
+                            <div class="form-check">
+                              <input class="form-check-input" type="radio"
+                                     name="preference" id="pref_balance"
+                                     value="equilibrio_prima_cobertura">
+                              <label class="form-check-label" for="pref_balance">
+                                Prefiero un equilibrio entre prima y coberturas.
+                              </label>
+                            </div>
+                          </div>
+                    
+                          <button type="submit" class="btn btn-primary btn-lg">Comenzar Estudio</button>
+                        </form>
+                      </div>
                     </div>
                 </div>
             </div>
@@ -230,3 +296,4 @@
     <script src="script.js"></script>
 </body>
 </html>
+
