@@ -64,26 +64,59 @@ class InsuranceStudy {
     if (noBuyBtn) noBuyBtn.addEventListener('click', () => this.recordResponse(3)); // 3 = No comprar
 
     window.addEventListener('beforeunload', (e) => {
-      if (this.userData.age && this.userData.gender &&
-          this.currentCard > 0 && this.currentCard < 10) {
-        e.preventDefault();
-        e.returnValue = 'Tienes respuestas sin completar. ¿Estás seguro de salir?';
-      }
-    });
+  if (
+    this.userData.age &&
+    this.userData.gender &&
+    this.userData.income &&
+    this.userData.visits &&
+    this.userData.preference &&
+    this.currentCard > 0 && this.currentCard < 10
+  ) {
+    e.preventDefault();
+    e.returnValue = 'Tienes respuestas sin completar. ¿Estás seguro de salir?';
+  }
+});
   }
 
-  handleDemographicSubmit() {
-    this.userData = {
-      age: document.getElementById('age').value,
-      gender: document.getElementById('gender').value,
-      startTime: new Date().toISOString()
-    };
-    const age = parseInt(this.userData.age, 10);
-    if (Number.isNaN(age) || age < 18 || age > 80) return alert('Edad válida 18–80.');
-    if (!this.userData.gender) return alert('Selecciona tu género.');
-    this.saveState();
-    this.showStep('explanation-step');
+handleDemographicSubmit() {
+  const age = document.getElementById('age').value;
+  const gender = document.getElementById('gender').value;
+  const income = document.getElementById('income').value;
+  const visits = document.getElementById('visits').value;
+  const prefEl = document.querySelector('input[name="preference"]:checked');
+  const preference = prefEl ? prefEl.value : '';
+
+  const ageNum = parseInt(age, 10);
+
+  if (Number.isNaN(ageNum) || ageNum < 18 || ageNum > 80) {
+    return alert('Edad válida: entre 18 y 80 años.');
   }
+  if (!gender) {
+    return alert('Selecciona tu género.');
+  }
+  if (!income) {
+    return alert('Selecciona tu rango de ingreso mensual.');
+  }
+  if (!visits) {
+    return alert('Selecciona cuántas veces has ido al médico en los últimos 12 meses.');
+  }
+  if (!preference) {
+    return alert('Selecciona la frase que mejor te describe.');
+  }
+
+  this.userData = {
+    age,
+    gender,
+    income,
+    visits,
+    preference,
+    startTime: new Date().toISOString()
+  };
+
+  this.saveState();
+  this.showStep('explanation-step');
+}
+
 
   startStudy() {
     if (this.responses.length >= 10) {
